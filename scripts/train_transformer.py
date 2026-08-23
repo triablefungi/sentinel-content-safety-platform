@@ -149,7 +149,7 @@ def main() -> None:
         per_device_eval_batch_size=args.batch_size * 2,
         num_train_epochs=args.epochs,
         weight_decay=0.01,
-        warmup_ratio=0.10,
+        warmup_steps=0.10,
         eval_strategy="epoch",
         save_strategy="epoch",
         logging_strategy="steps",
