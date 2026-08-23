@@ -20,3 +20,6 @@ download-data:
 
 train-baseline:
 	python scripts/train_baseline.py
+
+train-transformer:
+	python scripts/train_transformer.py

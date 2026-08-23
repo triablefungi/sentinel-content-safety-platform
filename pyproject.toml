@@ -28,6 +28,11 @@ ml = [
   "pandas>=2.2,<3.0",
   "scikit-learn>=1.6,<2.0",
 ]
+transformer = [
+  "accelerate>=1.0,<2.0",
+  "torch>=2.7,<3.0",
+  "transformers>=4.55,<6.0",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sentinel"]
@@ -40,6 +45,7 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+extend-exclude = ["notebooks"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]

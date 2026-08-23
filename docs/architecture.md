@@ -2,10 +2,11 @@
 
 ## Current milestone
 
-The service remains synchronous for the first two milestones. FastAPI validates a text request,
-the normalization layer reduces common obfuscations, a trie finds policy phrases, and an
-optional TF-IDF logistic-regression baseline provides a toxicity probability. The policy engine
-combines those independent signals into a versioned decision.
+The service remains synchronous for the initial ML milestones. FastAPI validates a text request,
+the normalization layer reduces common obfuscations, and a trie finds policy phrases. The
+service prefers a fine-tuned DistilBERT classifier and falls back to TF-IDF logistic regression
+when the transformer is absent. The policy engine combines those independent signals into a
+versioned decision.
 
 ```mermaid
 flowchart LR
@@ -13,7 +14,7 @@ flowchart LR
     B --> C[Normalizer]
     C --> D[Phrase trie]
     D --> E[Heuristic signals]
-    C --> F[ML baseline]
+    C --> F[Preferred ML model]
     E --> G[Policy engine]
     F --> G
     G --> H[Decision]

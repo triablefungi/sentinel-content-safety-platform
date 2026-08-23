@@ -8,14 +8,26 @@ from fastapi import FastAPI
 from sentinel.api.routes import router
 from sentinel.core.engine import ModerationEngine
 from sentinel.ml.baseline import SklearnToxicityModel
+from sentinel.ml.transformer import TransformerToxicityModel
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    model_path = Path(
+    transformer_path = Path(
+        os.getenv(
+            "SENTINEL_TRANSFORMER_MODEL_PATH",
+            "artifacts/models/transformer_toxicity",
+        )
+    )
+    baseline_path = Path(
         os.getenv("SENTINEL_MODEL_PATH", "artifacts/models/toxicity_baseline.joblib")
     )
-    toxicity_model = SklearnToxicityModel.load(model_path) if model_path.exists() else None
+    if transformer_path.exists():
+        toxicity_model = TransformerToxicityModel.load(transformer_path)
+    elif baseline_path.exists():
+        toxicity_model = SklearnToxicityModel.load(baseline_path)
+    else:
+        toxicity_model = None
     app.state.moderation_engine = ModerationEngine.default(toxicity_model=toxicity_model)
     yield
 

@@ -23,6 +23,7 @@ def test_ml_score_can_route_content_to_review() -> None:
     assert result.risk_score == 0.72
     assert result.signals[0].source == "ml:fake-v1"
     assert result.signals[0].category == "toxicity"
+    assert result.signals[0].reason_code == "toxicity_probability"
 
 
 def test_low_ml_score_keeps_safe_content_allowed() -> None:
@@ -33,4 +34,3 @@ def test_low_ml_score_keeps_safe_content_allowed() -> None:
     assert result.decision == "allow"
     assert result.risk_score == 0.10
     assert result.signals == []
-

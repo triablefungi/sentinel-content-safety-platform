@@ -5,9 +5,9 @@ user-generated content. It is being built as an end-to-end software engineering 
 from low-latency ingestion and algorithmic screening to transformer inference, vector retrieval,
 human feedback, model evaluation, and reliability monitoring.
 
-> **Current milestone:** a working FastAPI service plus a reproducible TF-IDF logistic-regression
-> training pipeline using a streamed Civil Comments sample. When the trained artifact exists,
-> the API combines model probabilities with heuristic safety signals.
+> **Current milestone:** a working FastAPI service, a reproducible TF-IDF baseline, and a
+> GPU-ready DistilBERT fine-tuning workflow. At runtime, Sentinel prefers the transformer model,
+> falls back to the baseline, and combines the selected model with heuristic safety signals.
 
 ## Why this project exists
 
@@ -96,14 +96,36 @@ This creates two local, untracked artifacts:
 Restart the API after training. It automatically loads the model and emits `ml:tfidf-logreg-v1`
 signals for sufficiently high toxicity probabilities.
 
+## Train the transformer
+
+Transformer fine-tuning is designed for a GPU environment. Open
+`notebooks/sentinel_transformer_training_colab.ipynb` in Google Colab, select a GPU runtime,
+and run the cells in order. The notebook clones this repository, recreates the dataset sample,
+fine-tunes DistilBERT, compares it with the baseline, and downloads the resulting model and
+metrics as a ZIP file.
+
+Local installation is also available:
+
+```bash
+python -m pip install -e ".[dev,ml,transformer]"
+python scripts/train_transformer.py --epochs 2 --batch-size 16
+```
+
+After placing the downloaded model folder at
+`artifacts/models/transformer_toxicity`, restart the API. It will automatically load
+`distilbert-toxicity-v1` instead of the TF-IDF model.
+
+See [`docs/transformer-architecture.md`](docs/transformer-architecture.md) for the model design,
+class-imbalance strategy, deployment interface, and limitations.
+
 ## Engineering roadmap
 
 - **Milestone 1 — Foundation:** FastAPI, policy schemas, normalization, trie screening, tests,
   Docker and CI.
 - **Milestone 2 — ML baseline:** Civil Comments streaming pipeline, TF-IDF logistic regression,
   model integration and binary toxicity evaluation.
-- **Milestone 3 — Transformer:** fine-tune DistilBERT, calibrate thresholds, register models in
-  MLflow, export an ONNX CPU model.
+- **Milestone 3 — Transformer:** fine-tune DistilBERT, compare it with the baseline, and load it
+  through the existing model interface.
 - **Milestone 4 — Distributed processing:** Kafka, consumer workers, idempotency, retries,
   dead-letter queues and load tests.
 - **Milestone 5 — Threat intelligence:** Milvus similarity search, near-duplicate campaign

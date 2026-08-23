@@ -13,7 +13,7 @@ from sentinel.schemas.moderation import (
 
 
 class ModerationEngine:
-    """Policy orchestration for the current heuristic-only milestone."""
+    """Combine deterministic rules and a swappable toxicity model."""
 
     def __init__(
         self,
@@ -49,7 +49,7 @@ class ModerationEngine:
                         source=f"ml:{self._toxicity_model.version}",
                         category="toxicity",
                         score=model_score,
-                        reason_code="baseline_toxicity_probability",
+                        reason_code="toxicity_probability",
                     )
                 )
 
