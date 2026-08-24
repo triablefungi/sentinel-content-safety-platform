@@ -5,9 +5,9 @@ user-generated content. It is being built as an end-to-end software engineering 
 from low-latency ingestion and algorithmic screening to transformer inference, vector retrieval,
 human feedback, model evaluation, and reliability monitoring.
 
-> **Current milestone:** a working FastAPI service, a reproducible TF-IDF baseline, and an
-> evaluated DistilBERT classifier. At runtime, Sentinel prefers the transformer model, falls back
-> to the baseline, and combines the selected model with heuristic safety signals.
+> **Current milestone:** synchronous and Kafka-backed asynchronous moderation, Redis idempotency,
+> bounded retries, a dead-letter queue, a reproducible TF-IDF baseline, and an evaluated
+> DistilBERT classifier.
 
 ## Why this project exists
 
@@ -44,6 +44,13 @@ Response:
 The initial rule catalogue is deliberately small and sanitized. It exists to validate the API,
 normalization, data structures, policy separation, and testing strategy before model integration.
 
+### Asynchronous moderation
+
+`POST /v1/moderation/jobs` accepts the same request with HTTP 202. It returns a stable `job_id`
+and an `accepted` state. Poll `GET /v1/moderation/jobs/{job_id}` until the job is `succeeded` or
+`failed`. Replaying the same `request_id` and content is idempotent; reusing the ID with different
+content returns HTTP 409.
+
 ## Run locally
 
 ### Python
@@ -55,7 +62,7 @@ python -m venv .venv
 Activate the environment, then run:
 
 ```bash
-python -m pip install -e ".[dev,ml]"
+python -m pip install -e ".[dev,ml,transformer,distributed]"
 uvicorn sentinel.main:app --app-dir src --reload
 ```
 
@@ -66,6 +73,34 @@ Open `http://localhost:8000/docs` for the interactive API documentation.
 ```bash
 docker compose up --build
 ```
+
+This launches Kafka, Redis, the API, a worker, and topic initialization. Then submit a job in the
+interactive documentation at `http://localhost:8000/docs`, or run:
+
+```bash
+python scripts/load_test_async.py --requests 100 --concurrency 10
+```
+
+### Local benchmark result
+
+On a single-machine Docker Desktop deployment with 100 requests and 10 concurrent clients:
+
+| Metric | Result |
+| --- | ---: |
+| Accepted / succeeded / failed | 100 / 100 / 0 |
+| Incomplete at timeout | 0 |
+| Submission throughput | 164.06 jobs/s |
+| Terminal throughput | 94.62 jobs/s |
+| Mean submission latency | 56.62 ms |
+| p50 submission latency | 55.11 ms |
+| p95 submission latency | 71.13 ms |
+
+A controlled recovery test also confirmed that a job accepted while the worker was stopped remained
+queued in Kafka and transitioned to `succeeded` after the worker restarted. These figures are local
+portfolio evidence, not claims of production or global-scale performance.
+
+See [`docs/distributed-architecture.md`](docs/distributed-architecture.md) for the component
+design, at-least-once contract, failure behaviour, and benchmark interpretation.
 
 ## Test and lint
 
@@ -147,7 +182,7 @@ risks, and limitations.
 - **Milestone 3 — Transformer:** fine-tune DistilBERT, compare it with the baseline, and load it
   through the existing model interface. **Complete.**
 - **Milestone 4 — Distributed processing:** Kafka, consumer workers, idempotency, retries,
-  dead-letter queues and load tests.
+  dead-letter queues and a bounded load-test harness. **Complete.**
 - **Milestone 5 — Threat intelligence:** Milvus similarity search, near-duplicate campaign
   detection and controlled agentic investigation.
 - **Milestone 6 — Operations:** OpenTelemetry, Prometheus, Grafana, SLO dashboards, failure

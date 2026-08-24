@@ -1,35 +1,28 @@
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI
 
 from sentinel.api.routes import router
-from sentinel.core.engine import ModerationEngine
-from sentinel.ml.baseline import SklearnToxicityModel
-from sentinel.ml.transformer import TransformerToxicityModel
+from sentinel.distributed.protocols import JobService
+from sentinel.runtime import build_moderation_engine
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    transformer_path = Path(
-        os.getenv(
-            "SENTINEL_TRANSFORMER_MODEL_PATH",
-            "artifacts/models/transformer_toxicity",
-        )
-    )
-    baseline_path = Path(
-        os.getenv("SENTINEL_MODEL_PATH", "artifacts/models/toxicity_baseline.joblib")
-    )
-    if transformer_path.exists():
-        toxicity_model = TransformerToxicityModel.load(transformer_path)
-    elif baseline_path.exists():
-        toxicity_model = SklearnToxicityModel.load(baseline_path)
-    else:
-        toxicity_model = None
-    app.state.moderation_engine = ModerationEngine.default(toxicity_model=toxicity_model)
-    yield
+    job_service: JobService | None = None
+    app.state.moderation_engine = build_moderation_engine()
+    if os.getenv("SENTINEL_DISTRIBUTED_ENABLED", "false").lower() in {"1", "true", "yes"}:
+        from sentinel.distributed.bootstrap import build_job_service_from_env
+
+        job_service = build_job_service_from_env()
+    app.state.job_service = job_service
+    try:
+        yield
+    finally:
+        if job_service is not None:
+            job_service.close()
 
 
 app = FastAPI(

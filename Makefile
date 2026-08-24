@@ -1,10 +1,13 @@
-.PHONY: install run test lint docker-up
+.PHONY: install run worker test lint docker-up load-test
 
 install:
 	python -m pip install -e ".[dev,ml]"
 
 run:
 	uvicorn sentinel.main:app --app-dir src --reload
+
+worker:
+	python -m sentinel.worker
 
 test:
 	pytest
@@ -14,6 +17,9 @@ lint:
 
 docker-up:
 	docker compose up --build
+
+load-test:
+	python scripts/load_test_async.py --requests 100 --concurrency 10
 
 download-data:
 	python scripts/download_data.py --sample-size 20000

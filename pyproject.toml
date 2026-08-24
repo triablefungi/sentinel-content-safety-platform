@@ -28,10 +28,18 @@ ml = [
   "pandas>=2.2,<3.0",
   "scikit-learn>=1.6,<2.0",
 ]
+inference = [
+  "joblib>=1.4,<2.0",
+  "scikit-learn>=1.6,<2.0",
+]
 transformer = [
   "accelerate>=1.0,<2.0",
   "torch>=2.7,<3.0",
   "transformers>=4.55,<6.0",
+]
+distributed = [
+  "confluent-kafka>=2.12,<3.0",
+  "redis>=6.4,<9.0",
 ]
 
 [tool.hatch.build.targets.wheel]

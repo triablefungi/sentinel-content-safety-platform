@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -51,3 +51,32 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     version: str
+
+
+class JobState(StrEnum):
+    ACCEPTED = "accepted"
+    PROCESSING = "processing"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+
+
+class ModerationJob(BaseModel):
+    job_id: str
+    request_id: str
+    state: JobState
+    attempt: int = Field(default=0, ge=0)
+    result: ModerationResponse | None = None
+    error_code: str | None = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+
+class StoredModerationJob(BaseModel):
+    job: ModerationJob
+    request_fingerprint: str
+
+
+class ModerationJobEvent(BaseModel):
+    job_id: str
+    request: ModerationRequest
+    attempt: int = Field(default=0, ge=0)

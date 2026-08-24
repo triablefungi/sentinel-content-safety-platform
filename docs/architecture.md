@@ -1,31 +1,38 @@
 # Architecture
 
-## Current milestone
+## Current architecture
 
-The service remains synchronous for the initial ML milestones. FastAPI validates a text request,
-the normalization layer reduces common obfuscations, and a trie finds policy phrases. The
-service prefers a fine-tuned DistilBERT classifier and falls back to TF-IDF logistic regression
-when the transformer is absent. The policy engine combines those independent signals into a
-versioned decision.
+Sentinel exposes both a synchronous decision path and an asynchronous job path. The moderation
+engine is shared: FastAPI validates text, normalization reduces common obfuscations, and a trie
+finds policy phrases. The service prefers a fine-tuned DistilBERT classifier, falls back to TF-IDF
+logistic regression, and combines the selected model with heuristic signals.
 
 ```mermaid
 flowchart LR
     A[Client] --> B[FastAPI]
-    B --> C[Normalizer]
+    B -->|synchronous| C[Normalizer]
     C --> D[Phrase trie]
     D --> E[Heuristic signals]
     C --> F[Preferred ML model]
     E --> G[Policy engine]
     F --> G
     G --> H[Decision]
+    B -->|asynchronous| K[(Kafka)]
+    K --> W[Worker group]
+    W --> C
+    B --> R[(Redis job state)]
+    W --> R
 ```
 
-## Target architecture
+See [Distributed moderation architecture](distributed-architecture.md) for delivery semantics,
+idempotency, retries, the dead-letter queue, and local operation.
 
-The production-oriented version separates synchronous admission from asynchronous deep
-analysis. Kafka buffers submissions; horizontally scalable workers run heuristic, transformer,
-and vector-retrieval stages. PostgreSQL stores decisions and policy history, while a review
-queue produces labels for retraining.
+## Next architecture increments
 
-Reliability requirements include idempotency keys, bounded retries, a dead-letter queue,
-circuit breakers, graceful model fallback, distributed traces, and explicit error budgets.
+Kafka now buffers submissions and worker replicas can join one consumer group. Future increments
+add vector retrieval, campaign detection, PostgreSQL decision history, and a review queue that
+produces controlled feedback for retraining.
+
+Implemented reliability controls include idempotency keys, bounded retries, a dead-letter queue,
+explicit offset commits, and graceful model fallback. Circuit breakers, distributed traces,
+failure injection, and explicit error-budget dashboards remain planned.
