@@ -5,9 +5,9 @@ user-generated content. It is being built as an end-to-end software engineering 
 from low-latency ingestion and algorithmic screening to transformer inference, vector retrieval,
 human feedback, model evaluation, and reliability monitoring.
 
-> **Current milestone:** a working FastAPI service, a reproducible TF-IDF baseline, and a
-> GPU-ready DistilBERT fine-tuning workflow. At runtime, Sentinel prefers the transformer model,
-> falls back to the baseline, and combines the selected model with heuristic safety signals.
+> **Current milestone:** a working FastAPI service, a reproducible TF-IDF baseline, and an
+> evaluated DistilBERT classifier. At runtime, Sentinel prefers the transformer model, falls back
+> to the baseline, and combines the selected model with heuristic safety signals.
 
 ## Why this project exists
 
@@ -118,6 +118,26 @@ After placing the downloaded model folder at
 See [`docs/transformer-architecture.md`](docs/transformer-architecture.md) for the model design,
 class-imbalance strategy, deployment interface, and limitations.
 
+## Evaluation results
+
+Both models use the same stratified 4,000-row test split from the 20,000-row Civil Comments
+sample. Toxic-class metrics are emphasized because overall accuracy is misleading for the
+imbalanced dataset.
+
+| Metric | TF-IDF baseline | DistilBERT | Improvement |
+| --- | ---: | ---: | ---: |
+| Toxic precision | 0.464 | 0.609 | +0.145 |
+| Toxic recall | 0.461 | 0.648 | +0.187 |
+| Toxic F1 | 0.463 | 0.628 | +0.165 |
+| ROC-AUC | 0.843 | 0.934 | +0.090 |
+| Average precision | 0.474 | 0.695 | +0.222 |
+| False positives | 165 | 129 | -36 |
+| False negatives | 167 | 109 | -58 |
+
+These results describe one held-out sample and are not production-safety claims. See the
+[`DistilBERT model card`](docs/model-card-transformer.md) for intended use, evaluation scope,
+risks, and limitations.
+
 ## Engineering roadmap
 
 - **Milestone 1 — Foundation:** FastAPI, policy schemas, normalization, trie screening, tests,
@@ -125,7 +145,7 @@ class-imbalance strategy, deployment interface, and limitations.
 - **Milestone 2 — ML baseline:** Civil Comments streaming pipeline, TF-IDF logistic regression,
   model integration and binary toxicity evaluation.
 - **Milestone 3 — Transformer:** fine-tune DistilBERT, compare it with the baseline, and load it
-  through the existing model interface.
+  through the existing model interface. **Complete.**
 - **Milestone 4 — Distributed processing:** Kafka, consumer workers, idempotency, retries,
   dead-letter queues and load tests.
 - **Milestone 5 — Threat intelligence:** Milvus similarity search, near-duplicate campaign
@@ -158,6 +178,8 @@ global scale:
 src/sentinel/          Application and moderation logic
 tests/                 Unit and API tests
 docs/                  Architecture and decision records
+notebooks/             Reproducible Colab GPU training workflow
+artifacts/metrics/     Versioned evaluation evidence
 .github/workflows/     Continuous integration
 ```
 
