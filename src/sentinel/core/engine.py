@@ -10,6 +10,7 @@ from sentinel.schemas.moderation import (
     ModerationResponse,
     ModerationSignal,
 )
+from sentinel.threat_intelligence.service import ThreatIntelligenceService
 
 
 class ModerationEngine:
@@ -19,13 +20,23 @@ class ModerationEngine:
         self,
         rule_engine: RuleEngine,
         toxicity_model: ToxicityModel | None = None,
+        threat_intelligence: ThreatIntelligenceService | None = None,
     ) -> None:
         self._rule_engine = rule_engine
         self._toxicity_model = toxicity_model
+        self._threat_intelligence = threat_intelligence
 
     @classmethod
-    def default(cls, toxicity_model: ToxicityModel | None = None) -> "ModerationEngine":
-        return cls(RuleEngine(DEFAULT_RULES), toxicity_model=toxicity_model)
+    def default(
+        cls,
+        toxicity_model: ToxicityModel | None = None,
+        threat_intelligence: ThreatIntelligenceService | None = None,
+    ) -> "ModerationEngine":
+        return cls(
+            RuleEngine(DEFAULT_RULES),
+            toxicity_model=toxicity_model,
+            threat_intelligence=threat_intelligence,
+        )
 
     def moderate(self, request: ModerationRequest) -> ModerationResponse:
         normalized_text = normalize_text(request.text)
@@ -53,8 +64,26 @@ class ModerationEngine:
                     )
                 )
 
+        threat_score = 0.0
+        if self._threat_intelligence is not None:
+            request_id = request.request_id or str(uuid4())
+            assessment = self._threat_intelligence.assess_and_index(
+                request_id=request_id,
+                text=request.text,
+            )
+            threat_score = assessment.risk_score
+            if assessment.coordinated:
+                signals.append(
+                    ModerationSignal(
+                        source=self._threat_intelligence.source,
+                        category="coordinated_abuse",
+                        score=threat_score,
+                        reason_code="similar_content_campaign",
+                    )
+                )
+
         rule_score = max((match.severity for match in matches), default=0.0)
-        risk_score = max(rule_score, model_score)
+        risk_score = max(rule_score, model_score, threat_score)
 
         if risk_score >= 0.85:
             decision = Decision.BLOCK
@@ -71,3 +100,7 @@ class ModerationEngine:
             policy_version="2026-08-01",
             evaluated_at=datetime.now(UTC),
         )
+
+    def close(self) -> None:
+        if self._threat_intelligence is not None:
+            self._threat_intelligence.close()

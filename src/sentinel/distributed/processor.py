@@ -70,6 +70,7 @@ class ModerationEventProcessor:
     def close(self) -> None:
         self._publisher.close()
         self._store.close()
+        self._engine.close()
 
     def _handle_failure(
         self,

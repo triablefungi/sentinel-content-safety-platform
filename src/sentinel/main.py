@@ -12,7 +12,8 @@ from sentinel.runtime import build_moderation_engine
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     job_service: JobService | None = None
-    app.state.moderation_engine = build_moderation_engine()
+    moderation_engine = build_moderation_engine()
+    app.state.moderation_engine = moderation_engine
     if os.getenv("SENTINEL_DISTRIBUTED_ENABLED", "false").lower() in {"1", "true", "yes"}:
         from sentinel.distributed.bootstrap import build_job_service_from_env
 
@@ -23,6 +24,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     finally:
         if job_service is not None:
             job_service.close()
+        moderation_engine.close()
 
 
 app = FastAPI(

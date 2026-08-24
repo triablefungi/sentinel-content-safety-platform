@@ -1,7 +1,7 @@
 .PHONY: install run worker test lint docker-up load-test
 
 install:
-	python -m pip install -e ".[dev,ml]"
+	python -m pip install -e ".[dev,ml,distributed,threat-intelligence]"
 
 run:
 	uvicorn sentinel.main:app --app-dir src --reload

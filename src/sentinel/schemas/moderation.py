@@ -15,6 +15,7 @@ class SafetyCategory(StrEnum):
     IDENTITY_ATTACK = "identity_attack"
     THREAT = "threat"
     TOXICITY = "toxicity"
+    COORDINATED_ABUSE = "coordinated_abuse"
 
 
 class ModerationRequest(BaseModel):

@@ -6,8 +6,8 @@ from low-latency ingestion and algorithmic screening to transformer inference, v
 human feedback, model evaluation, and reliability monitoring.
 
 > **Current milestone:** synchronous and Kafka-backed asynchronous moderation, Redis idempotency,
-> bounded retries, a dead-letter queue, a reproducible TF-IDF baseline, and an evaluated
-> DistilBERT classifier.
+> bounded retries, a dead-letter queue, Qdrant-backed near-duplicate campaign detection, a
+> reproducible TF-IDF baseline, and an evaluated DistilBERT classifier.
 
 ## Why this project exists
 
@@ -62,7 +62,7 @@ python -m venv .venv
 Activate the environment, then run:
 
 ```bash
-python -m pip install -e ".[dev,ml,transformer,distributed]"
+python -m pip install -e ".[dev,ml,transformer,distributed,threat-intelligence]"
 uvicorn sentinel.main:app --app-dir src --reload
 ```
 
@@ -74,8 +74,8 @@ Open `http://localhost:8000/docs` for the interactive API documentation.
 docker compose up --build
 ```
 
-This launches Kafka, Redis, the API, a worker, and topic initialization. Then submit a job in the
-interactive documentation at `http://localhost:8000/docs`, or run:
+This launches Kafka, Redis, Qdrant, the API, a worker, and topic initialization. Then submit a job
+in the interactive documentation at `http://localhost:8000/docs`, or run:
 
 ```bash
 python scripts/load_test_async.py --requests 100 --concurrency 10
@@ -101,6 +101,25 @@ portfolio evidence, not claims of production or global-scale performance.
 
 See [`docs/distributed-architecture.md`](docs/distributed-architecture.md) for the component
 design, at-least-once contract, failure behaviour, and benchmark interpretation.
+
+## Detect coordinated campaigns
+
+When Qdrant is configured, every moderation request is encoded as a normalized hashed character
+n-gram vector. Sentinel searches for close variants before indexing the new request. Two prior
+matches produce a `coordinated_abuse` review signal; five prior matches raise the campaign risk to
+the block threshold. Distinct request IDs prevent an idempotent replay from inflating the count.
+
+The current encoder is deliberately lightweight and deterministic. It catches copied or lightly
+obfuscated text, but it is not a semantic embedding model and will not reliably connect unrelated
+wording with the same meaning. The vector-store interface allows a stronger encoder to replace it
+without changing the policy engine.
+
+Qdrant stores the vector and request identifier, not raw user text. Embeddings can still leak
+information and must be protected with retention limits, authentication, encryption, and access
+controls in production. See
+[`docs/threat-intelligence-architecture.md`](docs/threat-intelligence-architecture.md) for the
+detection contract, test procedure, privacy analysis, and limitations. The local Qdrant dashboard
+is available at `http://localhost:6333/dashboard` while Compose is running.
 
 ## Test and lint
 
@@ -183,8 +202,8 @@ risks, and limitations.
   through the existing model interface. **Complete.**
 - **Milestone 4 — Distributed processing:** Kafka, consumer workers, idempotency, retries,
   dead-letter queues and a bounded load-test harness. **Complete.**
-- **Milestone 5 — Threat intelligence:** Milvus similarity search, near-duplicate campaign
-  detection and controlled agentic investigation.
+- **Milestone 5 — Threat intelligence:** Qdrant similarity search, privacy-conscious vector
+  metadata, and near-duplicate campaign detection. **Complete.**
 - **Milestone 6 — Operations:** OpenTelemetry, Prometheus, Grafana, SLO dashboards, failure
   injection and rollback exercises.
 - **Milestone 7 — Multimodal:** image safety classifier and combined text-image policy decisions.

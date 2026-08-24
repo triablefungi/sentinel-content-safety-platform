@@ -10,6 +10,7 @@ flowchart TD
     A -->|input event| K[(Kafka)]
     K --> W[Worker group]
     W --> M[Moderation engine]
+    M --> Q[(Qdrant vectors)]
     W -->|result or retry| K
     W -->|terminal state| R
     W -->|exhausted or invalid| D[DLQ topic]
@@ -24,6 +25,7 @@ flowchart TD
 | Redis | Stores job state and enforces create-if-absent idempotency with `SET NX`. |
 | Kafka | Buffers input, retry, result, and dead-letter events across three partitions. |
 | Worker group | Runs the existing layered moderation engine and explicitly commits offsets. |
+| Qdrant | Retrieves near-duplicate vectors and records privacy-conscious request metadata. |
 | DLQ | Retains sanitized failure metadata after schema failure or exhausted processing attempts. |
 
 ## Request lifecycle
@@ -63,8 +65,9 @@ docker compose up --build
 ```
 
 The Compose stack starts one KRaft Kafka broker, creates four versioned topics, starts Redis with
-append-only persistence, and launches the API and one worker. It mounts the local baseline model;
-the much larger transformer remains a host/accelerator deployment option.
+append-only persistence, starts Qdrant for campaign retrieval, and launches the API and one worker.
+It mounts the local baseline model; the much larger transformer remains a host/accelerator
+deployment option.
 
 Submit and inspect a job:
 
