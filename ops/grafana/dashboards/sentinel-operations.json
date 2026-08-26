@@ -1,0 +1,87 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"decimals": 3, "max": 1, "min": 0, "unit": "percentunit"}},
+      "gridPos": {"h": 5, "w": 6, "x": 0, "y": 0},
+      "id": 1,
+      "targets": [{"expr": "1 - (sum(rate(sentinel_http_requests_total{status_code=~\"5..\"}[5m])) / clamp_min(sum(rate(sentinel_http_requests_total[5m])), 0.001))", "refId": "A"}],
+      "title": "API availability (5m)",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "s"}},
+      "gridPos": {"h": 5, "w": 6, "x": 6, "y": 0},
+      "id": 2,
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(sentinel_http_request_duration_seconds_bucket{route=\"/v1/moderate/text\"}[5m])))", "refId": "A"}],
+      "title": "Fast-path p95 latency",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "reqps"}},
+      "gridPos": {"h": 5, "w": 6, "x": 12, "y": 0},
+      "id": 3,
+      "targets": [{"expr": "sum(rate(sentinel_http_requests_total[5m]))", "refId": "A"}],
+      "title": "API throughput",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {}},
+      "gridPos": {"h": 5, "w": 6, "x": 18, "y": 0},
+      "id": 4,
+      "targets": [{"expr": "sum by (job) (up{job=~\"sentinel-api|sentinel-worker\"})", "legendFormat": "{{job}}", "refId": "A"}],
+      "title": "Scrape target health",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 5},
+      "id": 5,
+      "targets": [{"expr": "sum by (decision, path) (rate(sentinel_moderation_decisions_total[5m]))", "legendFormat": "{{path}} / {{decision}}", "refId": "A"}],
+      "title": "Moderation decisions",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 5},
+      "id": 6,
+      "targets": [{"expr": "sum by (outcome) (rate(sentinel_job_submissions_total[5m]))", "legendFormat": "{{outcome}}", "refId": "A"}],
+      "title": "Job submission outcomes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 13},
+      "id": 7,
+      "targets": [{"expr": "sum by (outcome) (rate(sentinel_worker_events_total[5m]))", "legendFormat": "{{outcome}}", "refId": "A"}],
+      "title": "Worker outcomes, retries and DLQ",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "s"}},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 13},
+      "id": 8,
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le, path) (rate(sentinel_moderation_duration_seconds_bucket[5m])))", "legendFormat": "{{path}}", "refId": "A"}],
+      "title": "Moderation engine p95",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 41,
+  "tags": ["sentinel", "content-safety", "slo"],
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "title": "Sentinel Operations and SLOs",
+  "uid": "sentinel-operations",
+  "version": 1
+}

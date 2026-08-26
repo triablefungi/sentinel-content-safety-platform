@@ -16,6 +16,45 @@ def test_health_endpoint() -> None:
     assert response.json()["status"] == "ok"
 
 
+def test_readiness_endpoint() -> None:
+    with TestClient(app) as client:
+        response = client.get("/health/ready")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "ready"
+
+
+def test_request_id_is_generated_and_echoed() -> None:
+    with TestClient(app) as client:
+        response = client.get("/health")
+
+    assert response.status_code == 200
+    assert response.headers["x-request-id"]
+
+
+def test_valid_request_id_is_preserved() -> None:
+    with TestClient(app) as client:
+        response = client.get("/health", headers={"X-Request-ID": "incident-123"})
+
+    assert response.status_code == 200
+    assert response.headers["x-request-id"] == "incident-123"
+
+
+def test_metrics_endpoint_exports_slo_metrics() -> None:
+    with TestClient(app) as client:
+        client.post(
+            "/v1/moderate/text",
+            json={"text": "Thank you for sharing.", "request_id": "metrics-1"},
+        )
+        response = client.get("/metrics")
+
+    assert response.status_code == 200
+    assert "text/plain" in response.headers["content-type"]
+    assert "sentinel_http_requests_total" in response.text
+    assert "sentinel_http_request_duration_seconds" in response.text
+    assert "sentinel_moderation_decisions_total" in response.text
+
+
 def test_safe_text_is_allowed() -> None:
     with TestClient(app) as client:
         response = client.post(

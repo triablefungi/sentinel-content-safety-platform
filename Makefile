@@ -1,4 +1,4 @@
-.PHONY: install run worker test lint docker-up load-test
+.PHONY: install run worker test lint docker-up docker-ps observe load-test
 
 install:
 	python -m pip install -e ".[dev,ml,distributed,threat-intelligence]"
@@ -17,6 +17,12 @@ lint:
 
 docker-up:
 	docker compose up --build
+
+docker-ps:
+	docker compose ps
+
+observe:
+	python scripts/verify_observability.py
 
 load-test:
 	python scripts/load_test_async.py --requests 100 --concurrency 10

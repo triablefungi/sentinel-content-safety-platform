@@ -1,8 +1,10 @@
 import json
 from datetime import UTC, datetime
+from time import perf_counter
 
 from sentinel.core.engine import ModerationEngine
 from sentinel.distributed.protocols import EventPublisher, JobStore
+from sentinel.observability.metrics import SentinelMetrics
 from sentinel.schemas.moderation import (
     JobState,
     ModerationJobEvent,
@@ -22,6 +24,7 @@ class ModerationEventProcessor:
         result_topic: str = "sentinel.moderation.result.v1",
         dlq_topic: str = "sentinel.moderation.dlq.v1",
         max_attempts: int = 3,
+        metrics: SentinelMetrics | None = None,
     ) -> None:
         self._engine = engine
         self._store = store
@@ -30,13 +33,19 @@ class ModerationEventProcessor:
         self._result_topic = result_topic
         self._dlq_topic = dlq_topic
         self._max_attempts = max_attempts
+        self._metrics = metrics
 
     def process(self, event: ModerationJobEvent) -> None:
         stored_job = self._store.get(event.job_id)
         if stored_job is None:
             self._publish_dlq(event, "missing_job_state")
+            if self._metrics is not None:
+                self._metrics.record_worker_event("missing_job_state")
+                self._metrics.record_terminal_job("failed", "missing_job_state")
             return
         if stored_job.job.state == JobState.SUCCEEDED:
+            if self._metrics is not None:
+                self._metrics.record_worker_event("duplicate_skipped")
             return
 
         processing = self._with_job_update(
@@ -47,11 +56,17 @@ class ModerationEventProcessor:
         )
         self._store.save(processing)
 
+        started = perf_counter()
         try:
             result = self._engine.moderate(event.request)
         except Exception:
             self._handle_failure(event, processing)
             return
+        finally:
+            if self._metrics is not None:
+                self._metrics.moderation_duration.labels("worker").observe(
+                    perf_counter() - started
+                )
 
         self._publisher.publish(
             topic=self._result_topic,
@@ -66,6 +81,10 @@ class ModerationEventProcessor:
             error_code=None,
         )
         self._store.save(succeeded)
+        if self._metrics is not None:
+            self._metrics.record_decision(result.decision.value, "worker")
+            self._metrics.record_worker_event("succeeded")
+            self._metrics.record_terminal_job("succeeded")
 
     def close(self) -> None:
         self._publisher.close()
@@ -92,6 +111,8 @@ class ModerationEventProcessor:
                 error_code="processing_retry_scheduled",
             )
             self._store.save(retrying)
+            if self._metrics is not None:
+                self._metrics.record_worker_event("retry_scheduled")
             return
 
         self._publish_dlq(event, "processing_attempts_exhausted")
@@ -102,6 +123,11 @@ class ModerationEventProcessor:
             error_code="processing_attempts_exhausted",
         )
         self._store.save(failed)
+        if self._metrics is not None:
+            self._metrics.record_worker_event("dlq")
+            self._metrics.record_terminal_job(
+                "failed", "processing_attempts_exhausted"
+            )
 
     def _publish_dlq(self, event: ModerationJobEvent, error_code: str) -> None:
         payload = {

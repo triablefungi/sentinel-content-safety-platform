@@ -6,11 +6,14 @@ from fastapi import FastAPI
 
 from sentinel.api.routes import router
 from sentinel.distributed.protocols import JobService
+from sentinel.observability.metrics import API_METRICS
+from sentinel.observability.middleware import RequestObservabilityMiddleware
 from sentinel.runtime import build_moderation_engine
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    app.state.ready = False
     job_service: JobService | None = None
     moderation_engine = build_moderation_engine()
     app.state.moderation_engine = moderation_engine
@@ -19,9 +22,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
         job_service = build_job_service_from_env()
     app.state.job_service = job_service
+    app.state.ready = True
     try:
         yield
     finally:
+        app.state.ready = False
         if job_service is not None:
             job_service.close()
         moderation_engine.close()
@@ -33,4 +38,6 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+app.state.metrics = API_METRICS
+app.add_middleware(RequestObservabilityMiddleware, metrics=API_METRICS)
 app.include_router(router)

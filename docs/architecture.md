@@ -27,6 +27,17 @@ flowchart LR
     W --> R
 ```
 
+The operational plane observes both runtime paths without ingesting raw user content:
+
+```mermaid
+flowchart TD
+    A[API metrics] --> P[Prometheus]
+    W[Worker metrics] --> P
+    P --> G[Grafana dashboard]
+    P --> R[Alert rules]
+    R --> B[Incident runbooks]
+```
+
 See [Distributed moderation architecture](distributed-architecture.md) for delivery semantics,
 idempotency, retries, the dead-letter queue, and local operation. See
 [Threat-intelligence architecture](threat-intelligence-architecture.md) for vector retrieval,
@@ -39,5 +50,9 @@ near-duplicate content vectors and raises coordinated-campaign signals. Future i
 PostgreSQL decision history and a review queue that produces controlled feedback for retraining.
 
 Implemented reliability controls include idempotency keys, bounded retries, a dead-letter queue,
-explicit offset commits, and graceful model fallback. Circuit breakers, distributed traces,
-failure injection, and explicit error-budget dashboards remain planned.
+explicit offset commits, graceful model fallback, readiness checks, SLO metrics, provisioned
+dashboards, alerts, and incident runbooks. Circuit breakers, distributed traces, production
+long-term telemetry storage, and orchestrated rollback remain planned.
+
+See [Service-level objectives](slo.md) and the [local operations guide](operations.md) for the
+measurement and response contract.

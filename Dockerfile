@@ -12,6 +12,6 @@ COPY src ./src
 
 RUN pip install --no-cache-dir ".[inference,distributed,threat-intelligence]"
 
-EXPOSE 8000
+EXPOSE 8000 9101
 
 CMD ["uvicorn", "sentinel.main:app", "--app-dir", "src", "--host", "0.0.0.0", "--port", "8000"]

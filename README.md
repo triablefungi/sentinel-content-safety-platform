@@ -6,8 +6,9 @@ from low-latency ingestion and algorithmic screening to transformer inference, v
 human feedback, model evaluation, and reliability monitoring.
 
 > **Current milestone:** synchronous and Kafka-backed asynchronous moderation, Redis idempotency,
-> bounded retries, a dead-letter queue, Qdrant-backed near-duplicate campaign detection, a
-> reproducible TF-IDF baseline, and an evaluated DistilBERT classifier.
+> bounded retries, a dead-letter queue, Qdrant-backed near-duplicate campaign detection,
+> Prometheus/Grafana observability with SLO alerts and runbooks, a reproducible TF-IDF baseline,
+> and an evaluated DistilBERT classifier.
 
 ## Why this project exists
 
@@ -74,8 +75,9 @@ Open `http://localhost:8000/docs` for the interactive API documentation.
 docker compose up --build
 ```
 
-This launches Kafka, Redis, Qdrant, the API, a worker, and topic initialization. Then submit a job
-in the interactive documentation at `http://localhost:8000/docs`, or run:
+This launches Kafka, Redis, Qdrant, the API, a worker, Prometheus, Grafana, and topic
+initialization. Then submit a job in the interactive documentation at
+`http://localhost:8000/docs`, or run:
 
 ```bash
 python scripts/load_test_async.py --requests 100 --concurrency 10
@@ -101,6 +103,29 @@ portfolio evidence, not claims of production or global-scale performance.
 
 See [`docs/distributed-architecture.md`](docs/distributed-architecture.md) for the component
 design, at-least-once contract, failure behaviour, and benchmark interpretation.
+
+## Observe and operate the system
+
+The API exports low-cardinality Prometheus metrics and echoes an `X-Request-ID` correlation header.
+The worker exposes processing, retry, terminal-state, DLQ, and moderation-duration metrics on the
+internal Compose network.
+
+| Interface | Local URL |
+| --- | --- |
+| Readiness | `http://localhost:8000/health/ready` |
+| API metrics | `http://localhost:8000/metrics` |
+| Prometheus and alerts | `http://localhost:9090` |
+| Grafana dashboard | `http://localhost:3000` |
+
+Verify the running API from any platform with:
+
+```bash
+python scripts/verify_observability.py
+```
+
+See the [operations guide](docs/operations.md), [SLO specification](docs/slo.md), and incident
+runbooks in [`docs/runbooks`](docs/runbooks). The bundled Grafana dashboard reports availability,
+p95 latency, throughput, decisions, retries, worker outcomes, and dead-letter events.
 
 ## Detect coordinated campaigns
 
@@ -204,11 +229,11 @@ risks, and limitations.
   dead-letter queues and a bounded load-test harness. **Complete.**
 - **Milestone 5 — Threat intelligence:** Qdrant similarity search, privacy-conscious vector
   metadata, and near-duplicate campaign detection. **Complete.**
-- **Milestone 6 — Operations:** OpenTelemetry, Prometheus, Grafana, SLO dashboards, failure
-  injection and rollback exercises.
+- **Milestone 6 — Operations:** Prometheus metrics, Grafana SLO dashboards, low-cardinality request
+  instrumentation, alert rules, correlation IDs, and incident runbooks. **Complete.**
 - **Milestone 7 — Multimodal:** image safety classifier and combined text-image policy decisions.
 
-## Initial SLO hypotheses
+## Operational SLOs
 
 These are targets to validate under a documented local load-test environment, not claims of
 global scale:
@@ -217,6 +242,10 @@ global scale:
 - p95 latency below 250 ms for the fast moderation path.
 - At least 99.99% of accepted events reach a terminal decision or the dead-letter queue.
 - No model version is promoted when a category-specific safety threshold regresses.
+
+The precise indicators, PromQL, error-budget interpretation, and limitations are documented in
+[`docs/slo.md`](docs/slo.md). OpenTelemetry traces and production-grade long-term metric storage
+remain future extensions.
 
 ## Responsible development
 
@@ -232,6 +261,7 @@ global scale:
 src/sentinel/          Application and moderation logic
 tests/                 Unit and API tests
 docs/                  Architecture and decision records
+ops/                   Prometheus rules and Grafana provisioning
 notebooks/             Reproducible Colab GPU training workflow
 artifacts/metrics/     Versioned evaluation evidence
 .github/workflows/     Continuous integration

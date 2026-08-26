@@ -1,0 +1,59 @@
+groups:
+  - name: sentinel-slo-alerts
+    rules:
+      - alert: SentinelTargetDown
+        expr: up{job=~"sentinel-api|sentinel-worker"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sentinel target {{ $labels.job }} is down"
+          runbook: "docs/runbooks/service-unavailable.md"
+
+      - alert: SentinelAvailabilityBudgetBurn
+        expr: |
+          (
+            sum(rate(sentinel_http_requests_total{status_code=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(sentinel_http_requests_total[5m])), 0.001)
+          ) > 0.001
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API 5xx rate is consuming the 99.9% availability budget"
+          runbook: "docs/runbooks/service-unavailable.md"
+
+      - alert: SentinelFastPathLatencySLOBreach
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (
+              rate(sentinel_http_request_duration_seconds_bucket{
+                route="/v1/moderate/text"
+              }[5m])
+            )
+          ) > 0.25
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Synchronous moderation p95 latency exceeds 250 ms"
+          runbook: "docs/runbooks/latency-breach.md"
+
+      - alert: SentinelDLQEventDetected
+        expr: increase(sentinel_worker_events_total{outcome="dlq"}[5m]) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "A moderation event exhausted its retry budget"
+          runbook: "docs/runbooks/job-pipeline.md"
+
+      - alert: SentinelRetryRateHigh
+        expr: rate(sentinel_worker_events_total{outcome="retry_scheduled"}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Moderation worker retry rate is elevated"
+          runbook: "docs/runbooks/job-pipeline.md"

@@ -1,6 +1,7 @@
 from sentinel.core.engine import ModerationEngine
 from sentinel.distributed.adapters import InMemoryJobStore, RecordingEventPublisher
 from sentinel.distributed.processor import ModerationEventProcessor
+from sentinel.observability.metrics import SentinelMetrics
 from sentinel.schemas.moderation import (
     JobState,
     ModerationJob,
@@ -87,3 +88,48 @@ def test_final_failure_is_sent_to_dlq() -> None:
     assert stored_job.job.state == JobState.FAILED
     assert stored_job.job.error_code == "processing_attempts_exhausted"
     assert publisher.events[0]["topic"] == "sentinel.moderation.dlq.v1"
+
+
+def test_worker_metrics_record_success_and_decision() -> None:
+    event, store = create_event_and_store()
+    metrics = SentinelMetrics("test-worker-success")
+    processor = ModerationEventProcessor(
+        engine=ModerationEngine.default(),
+        store=store,
+        publisher=RecordingEventPublisher(),
+        metrics=metrics,
+    )
+
+    processor.process(event)
+    exposition = metrics.render().decode()
+
+    assert 'sentinel_worker_events_total{outcome="succeeded"} 1.0' in exposition
+    assert 'sentinel_terminal_jobs_total{error_code="none",state="succeeded"} 1.0' in exposition
+
+
+def test_worker_metrics_record_retry_and_dlq() -> None:
+    retry_event, retry_store = create_event_and_store()
+    metrics = SentinelMetrics("test-worker-failure")
+    retry_processor = ModerationEventProcessor(
+        engine=FailingEngine(),  # type: ignore[arg-type]
+        store=retry_store,
+        publisher=RecordingEventPublisher(),
+        max_attempts=3,
+        metrics=metrics,
+    )
+    retry_processor.process(retry_event)
+
+    dlq_event, dlq_store = create_event_and_store()
+    dlq_event = dlq_event.model_copy(update={"attempt": 2})
+    dlq_processor = ModerationEventProcessor(
+        engine=FailingEngine(),  # type: ignore[arg-type]
+        store=dlq_store,
+        publisher=RecordingEventPublisher(),
+        max_attempts=3,
+        metrics=metrics,
+    )
+    dlq_processor.process(dlq_event)
+    exposition = metrics.render().decode()
+
+    assert 'sentinel_worker_events_total{outcome="retry_scheduled"} 1.0' in exposition
+    assert 'sentinel_worker_events_total{outcome="dlq"} 1.0' in exposition

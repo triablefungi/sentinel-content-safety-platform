@@ -4,10 +4,12 @@ import signal
 from types import FrameType
 from typing import Any
 
+from prometheus_client import start_http_server
 from pydantic import ValidationError
 
 from sentinel.distributed.adapters import KafkaEventPublisher, RedisJobStore
 from sentinel.distributed.processor import ModerationEventProcessor
+from sentinel.observability.metrics import WORKER_METRICS
 from sentinel.runtime import build_moderation_engine
 from sentinel.schemas.moderation import ModerationJobEvent
 
@@ -28,6 +30,7 @@ def build_processor() -> ModerationEventProcessor:
         result_topic=os.getenv("SENTINEL_RESULT_TOPIC", "sentinel.moderation.result.v1"),
         dlq_topic=os.getenv("SENTINEL_DLQ_TOPIC", "sentinel.moderation.dlq.v1"),
         max_attempts=int(os.getenv("SENTINEL_MAX_ATTEMPTS", "3")),
+        metrics=WORKER_METRICS,
     )
 
 
@@ -51,6 +54,10 @@ def build_consumer() -> Any:
 
 
 def run() -> None:
+    start_http_server(
+        int(os.getenv("SENTINEL_WORKER_METRICS_PORT", "9101")),
+        registry=WORKER_METRICS.registry,
+    )
     consumer = build_consumer()
     processor = build_processor()
     input_topic = os.getenv("SENTINEL_INPUT_TOPIC", "sentinel.moderation.input.v1")
@@ -83,6 +90,8 @@ def run() -> None:
             try:
                 event = ModerationJobEvent.model_validate_json(message.value())
             except ValidationError:
+                WORKER_METRICS.record_worker_event("invalid_event_schema")
+                WORKER_METRICS.record_terminal_job("failed", "invalid_event_schema")
                 invalid_payload = json.dumps(
                     {
                         "error_code": "invalid_event_schema",
