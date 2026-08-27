@@ -6,6 +6,7 @@ x-sentinel-environment: &sentinel-environment
   SENTINEL_QDRANT_COLLECTION: sentinel-threat-signals-v1
   SENTINEL_MODEL_PATH: /app/artifacts/models/toxicity_baseline.joblib
   SENTINEL_TRANSFORMER_MODEL_PATH: /app/artifacts/models/disabled-transformer
+  SENTINEL_IMAGE_MODEL_PATH: /app/artifacts/models/image_safety
 
 services:
   kafka:

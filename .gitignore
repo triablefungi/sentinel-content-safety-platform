@@ -13,3 +13,4 @@ data/processed/*.csv
 artifacts/models/*.joblib
 artifacts/models/transformer_toxicity/
 artifacts/models/transformer_checkpoints/
+artifacts/models/image_safety/

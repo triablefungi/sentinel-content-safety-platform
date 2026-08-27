@@ -5,7 +5,23 @@ from fastapi.testclient import TestClient
 from sentinel.distributed.adapters import InMemoryJobStore, RecordingEventPublisher
 from sentinel.distributed.service import DistributedModerationService
 from sentinel.main import app
-from sentinel.schemas.moderation import JobState, ModerationJob
+from sentinel.schemas.moderation import JobState, ModerationJob, SafetyCategory
+
+
+class SafeImageModel:
+    @property
+    def version(self) -> str:
+        return "safe-image-test-v1"
+
+    def predict_scores(self, image):  # type: ignore[no-untyped-def]
+        return {SafetyCategory.SEXUAL_CONTENT: 0.05}
+
+
+def image_base64() -> str:
+    return (
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42Y"
+        "AAAAASUVORK5CYII="
+    )
 
 
 def test_health_endpoint() -> None:
@@ -98,6 +114,49 @@ def test_blank_text_is_rejected() -> None:
         response = client.post("/v1/moderate/text", json={"text": "   "})
 
     assert response.status_code == 422
+
+
+def test_multimodal_endpoint_is_unavailable_without_image_model() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1/moderate/multimodal",
+            json={"image_base64": image_base64(), "media_type": "image/png"},
+        )
+
+    assert response.status_code == 503
+    assert response.json()["detail"] == "image moderation is not enabled"
+
+
+def test_multimodal_endpoint_validates_and_scores_image(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    monkeypatch.setattr("sentinel.main.build_image_safety_model", SafeImageModel)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1/moderate/multimodal",
+            json={
+                "image_base64": image_base64(),
+                "media_type": "image/png",
+                "text": "A safe caption.",
+                "request_id": "image-api-1",
+            },
+        )
+
+    assert response.status_code == 200
+    assert response.json()["decision"] == "allow"
+    assert response.json()["modalities"] == ["text", "image"]
+    assert response.json()["image"]["format"] == "PNG"
+
+
+def test_multimodal_endpoint_rejects_signature_mismatch(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    monkeypatch.setattr("sentinel.main.build_image_safety_model", SafeImageModel)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1/moderate/multimodal",
+            json={"image_base64": image_base64(), "media_type": "image/jpeg"},
+        )
+
+    assert response.status_code == 415
 
 
 def test_distributed_endpoint_is_explicitly_unavailable_when_disabled() -> None:

@@ -9,7 +9,8 @@ human feedback, model evaluation, and reliability monitoring.
 > bounded retries, a dead-letter queue, Qdrant-backed near-duplicate campaign detection,
 > Prometheus/Grafana observability with SLO alerts and runbooks, a reproducible TF-IDF baseline,
 > an evaluated DistilBERT classifier, and an adversarial text-evaluation suite with model-promotion
-> gates.
+> gates. Secure multimodal ingestion and text-image policy fusion are now available behind an
+> explicitly downloaded, checksum-verified local model.
 
 ## Why this project exists
 
@@ -69,6 +70,35 @@ uvicorn sentinel.main:app --app-dir src --reload
 ```
 
 Open `http://localhost:8000/docs` for the interactive API documentation.
+
+Install the optional image boundary and local vision adapter with:
+
+```bash
+python -m pip install -e ".[dev,ml,transformer,distributed,threat-intelligence,multimodal]"
+```
+
+### Multimodal moderation
+
+`POST /v1/moderate/multimodal` accepts a bounded Base64-encoded JPEG, PNG, or WebP image plus
+optional text. It validates the real file signature, dimensions, pixel count, animation flags, and
+declared media type before inference. Image-model loading is explicit and fails closed when the
+reviewed local artifact or label mapping is absent.
+
+Text and image signals are fused using the strictest risk. Cross-modal disagreement is preserved as
+an auditable signal rather than weakening a block. Image bytes and metadata are not stored or
+returned. See the [multimodal architecture](docs/multimodal-architecture.md) and
+[secure-boundary ADR](docs/adr/0007-secure-multimodal-boundary.md).
+
+Download the reviewed candidate model separately from application startup:
+
+```bash
+python scripts/download_image_model.py
+```
+
+The downloader pins the repository revision and verifies the 45 MB safetensors artifact by
+SHA-256 before writing the local, ignored model directory. The selected SwiftFormer model maps
+`NSFW` to `sexual_content` and `NSFL` (gore) to `graphic_violence`. Its proprietary training data
+and underrepresented NSFL slice make it an evaluation candidate, not a production-approved model.
 
 ### Docker
 
@@ -263,7 +293,8 @@ promotion semantics.
   instrumentation, alert rules, correlation IDs, and incident runbooks. **Complete.**
 - **Milestone 7 — Adversarial evaluation:** versioned red-team cases, deterministic evasion
   transformations, slice-level metrics, threshold analysis, and model-promotion gates.
-- **Milestone 8 — Multimodal:** image safety classifier and combined text-image policy decisions.
+- **Milestone 8 — Multimodal:** secure image ingestion, an optional reviewed vision-model adapter,
+  and combined text-image policy decisions. **In progress.**
 
 ## Operational SLOs
 

@@ -6,12 +6,21 @@ from prometheus_client import CONTENT_TYPE_LATEST
 from sentinel.core.engine import ModerationEngine
 from sentinel.distributed.errors import IdempotencyConflictError, QueueUnavailableError
 from sentinel.distributed.protocols import JobService
+from sentinel.multimodal.engine import MultimodalModerationEngine
+from sentinel.multimodal.errors import (
+    ImageTooLargeError,
+    ImageValidationError,
+    UnsupportedImageError,
+)
+from sentinel.multimodal.protocols import ImageSafetyModel
 from sentinel.observability.metrics import SentinelMetrics
 from sentinel.schemas.moderation import (
     HealthResponse,
     ModerationJob,
     ModerationRequest,
     ModerationResponse,
+    MultimodalModerationRequest,
+    MultimodalModerationResponse,
 )
 
 router = APIRouter()
@@ -56,6 +65,52 @@ async def moderate_text(payload: ModerationRequest, request: Request) -> Moderat
         telemetry.timer() - started
     )
     telemetry.record_decision(response.decision.value, "synchronous")
+    return response
+
+
+@router.post(
+    "/v1/moderate/multimodal",
+    response_model=MultimodalModerationResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["moderation"],
+)
+async def moderate_multimodal(
+    payload: MultimodalModerationRequest,
+    request: Request,
+) -> MultimodalModerationResponse:
+    image_model: ImageSafetyModel | None = request.app.state.image_safety_model
+    telemetry: SentinelMetrics = request.app.state.metrics
+    if image_model is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="image moderation is not enabled",
+        )
+    engine = MultimodalModerationEngine(
+        text_engine=request.app.state.moderation_engine,
+        image_model=image_model,
+    )
+    started = telemetry.timer()
+    try:
+        response = await asyncio.to_thread(engine.moderate, payload)
+    except ImageTooLargeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+            detail=str(exc),
+        ) from exc
+    except UnsupportedImageError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=str(exc),
+        ) from exc
+    except ImageValidationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=str(exc),
+        ) from exc
+    telemetry.moderation_duration.labels("multimodal").observe(
+        telemetry.timer() - started
+    )
+    telemetry.record_decision(response.decision.value, "multimodal")
     return response
 
 

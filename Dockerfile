@@ -10,7 +10,7 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
 
-RUN pip install --no-cache-dir ".[inference,distributed,threat-intelligence]"
+RUN pip install --no-cache-dir ".[inference,distributed,threat-intelligence,multimodal]"
 
 EXPOSE 8000 9101
 

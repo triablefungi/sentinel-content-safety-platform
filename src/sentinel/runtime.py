@@ -5,6 +5,7 @@ from sentinel.core.engine import ModerationEngine
 from sentinel.ml.baseline import SklearnToxicityModel
 from sentinel.ml.ensemble import MaxScoreToxicityEnsemble
 from sentinel.ml.transformer import TransformerToxicityModel
+from sentinel.multimodal.protocols import ImageSafetyModel
 from sentinel.threat_intelligence.service import ThreatIntelligenceService
 
 
@@ -32,6 +33,17 @@ def build_moderation_engine() -> ModerationEngine:
         toxicity_model=toxicity_model,
         threat_intelligence=threat_intelligence,
     )
+
+
+def build_image_safety_model() -> ImageSafetyModel | None:
+    image_model_path = Path(
+        os.getenv("SENTINEL_IMAGE_MODEL_PATH", "artifacts/models/image_safety")
+    )
+    if not image_model_path.exists():
+        return None
+    from sentinel.multimodal.timm_model import TimmImageSafetyModel
+
+    return TimmImageSafetyModel.load(image_model_path)
 
 
 def _build_threat_intelligence() -> ThreatIntelligenceService | None:

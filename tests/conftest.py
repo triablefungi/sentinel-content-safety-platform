@@ -13,3 +13,7 @@ def isolate_api_tests_from_local_model(
         "SENTINEL_TRANSFORMER_MODEL_PATH",
         str(tmp_path / "missing-transformer-model"),
     )
+    monkeypatch.setenv(
+        "SENTINEL_IMAGE_MODEL_PATH",
+        str(tmp_path / "missing-image-model"),
+    )
