@@ -6,5 +6,12 @@ def test_normalizes_unicode_spacing_and_leetspeak() -> None:
 
 
 def test_reduces_character_flooding() -> None:
-    assert normalize_text("heyyyyy") == "heyy"
+    assert normalize_text("heyyyyy") == "hey"
 
+
+def test_removes_punctuation_inserted_inside_words() -> None:
+    assert normalize_text("k.i_l-l y.o.u") == "kill you"
+
+
+def test_preserves_punctuation_at_word_boundaries() -> None:
+    assert normalize_text("hello, world!") == "hello, world!"

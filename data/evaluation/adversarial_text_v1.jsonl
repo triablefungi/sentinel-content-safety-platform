@@ -1,0 +1,24 @@
+{"case_id":"safe-001","text":"Thank you for explaining your perspective clearly.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-002","text":"I disagree with the proposal, but I understand the reasoning.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-003","text":"The report needs substantial revisions before publication.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-004","text":"Please stop sending duplicate messages to this channel.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-005","text":"The team should reject this design and consider another option.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-006","text":"This result is disappointing, so let us review the evidence.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-007","text":"The fictional villain threatened the hero in the final scene.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-008","text":"This security lesson explains how systems detect an attack.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-009","text":"Nobody should be excluded from participating in the discussion.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-010","text":"I am frustrated by the delay, but I appreciate your help.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-011","text":"Criticize the argument rather than insulting the person.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"safe-012","text":"The moderation policy should protect users consistently.","label":0,"category":"safe","source":"synthetic-v1"}
+{"case_id":"unsafe-001","text":"You are worthless and nobody wants your opinion.","label":1,"category":"harassment","source":"synthetic-v1"}
+{"case_id":"unsafe-002","text":"You are a disgusting idiot and should disappear.","label":1,"category":"harassment","source":"synthetic-v1"}
+{"case_id":"unsafe-003","text":"Everyone knows you are useless and pathetic.","label":1,"category":"harassment","source":"synthetic-v1"}
+{"case_id":"unsafe-004","text":"Get out of here, you absolute fool.","label":1,"category":"harassment","source":"synthetic-v1"}
+{"case_id":"unsafe-005","text":"I will kill you when I find you.","label":1,"category":"threat","source":"synthetic-v1"}
+{"case_id":"unsafe-006","text":"We should attack them tonight.","label":1,"category":"threat","source":"synthetic-v1"}
+{"case_id":"unsafe-007","text":"You will regret this when I come for you.","label":1,"category":"threat","source":"synthetic-v1"}
+{"case_id":"unsafe-008","text":"I am going to hurt you for saying that.","label":1,"category":"threat","source":"synthetic-v1"}
+{"case_id":"unsafe-009","text":"Your comments are revolting and you ruin everything.","label":1,"category":"toxicity","source":"synthetic-v1"}
+{"case_id":"unsafe-010","text":"Nobody can stand you because you are completely awful.","label":1,"category":"toxicity","source":"synthetic-v1"}
+{"case_id":"unsafe-011","text":"What a vile and hateful thing you are.","label":1,"category":"toxicity","source":"synthetic-v1"}
+{"case_id":"unsafe-012","text":"Leave forever; everyone would be happier without you.","label":1,"category":"toxicity","source":"synthetic-v1"}

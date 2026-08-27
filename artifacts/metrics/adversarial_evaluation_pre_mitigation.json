@@ -1,0 +1,2582 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-27T09:39:49.524462+00:00",
+  "corpus": {
+    "path": "data/evaluation/adversarial_text_v1.jsonl",
+    "base_cases": 24,
+    "evaluated_variants_per_model": 144,
+    "attacks": [
+      "clean",
+      "uppercase",
+      "zero_width",
+      "leetspeak",
+      "punctuation",
+      "character_flooding"
+    ],
+    "source": "synthetic-v1"
+  },
+  "models": {
+    "tfidf-logreg-v1": {
+      "model_version": "tfidf-logreg-v1",
+      "decision_threshold": 0.5,
+      "overall": {
+        "examples": 144,
+        "threshold": 0.5,
+        "accuracy": 0.6388888888888888,
+        "precision": 0.9545454545454546,
+        "recall": 0.2916666666666667,
+        "f1": 0.4468085106382979,
+        "false_positive_rate": 0.013888888888888888,
+        "false_negative_rate": 0.7083333333333334,
+        "confusion_matrix": {
+          "tn": 71,
+          "fp": 1,
+          "fn": 51,
+          "tp": 21
+        }
+      },
+      "by_attack": {
+        "character_flooding": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.75,
+          "precision": 0.875,
+          "recall": 0.5833333333333334,
+          "f1": 0.7000000000000001,
+          "false_positive_rate": 0.08333333333333333,
+          "false_negative_rate": 0.4166666666666667,
+          "confusion_matrix": {
+            "tn": 11,
+            "fp": 1,
+            "fn": 5,
+            "tp": 7
+          }
+        },
+        "clean": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.7916666666666666,
+          "precision": 1.0,
+          "recall": 0.5833333333333334,
+          "f1": 0.7368421052631579,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.4166666666666667,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 5,
+            "tp": 7
+          }
+        },
+        "leetspeak": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 1.0,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 12,
+            "tp": 0
+          }
+        },
+        "punctuation": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 1.0,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 12,
+            "tp": 0
+          }
+        },
+        "uppercase": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.7916666666666666,
+          "precision": 1.0,
+          "recall": 0.5833333333333334,
+          "f1": 0.7368421052631579,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.4166666666666667,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 5,
+            "tp": 7
+          }
+        },
+        "zero_width": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 1.0,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 12,
+            "tp": 0
+          }
+        }
+      },
+      "by_category": {
+        "harassment": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.4583333333333333,
+          "precision": 1.0,
+          "recall": 0.4583333333333333,
+          "f1": 0.6285714285714286,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.5416666666666666,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 13,
+            "tp": 11
+          }
+        },
+        "safe": {
+          "examples": 72,
+          "threshold": 0.5,
+          "accuracy": 0.9861111111111112,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.013888888888888888,
+          "false_negative_rate": 0.0,
+          "confusion_matrix": {
+            "tn": 71,
+            "fp": 1,
+            "fn": 0,
+            "tp": 0
+          }
+        },
+        "threat": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.041666666666666664,
+          "precision": 1.0,
+          "recall": 0.041666666666666664,
+          "f1": 0.07999999999999999,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.9583333333333334,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 23,
+            "tp": 1
+          }
+        },
+        "toxicity": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.375,
+          "precision": 1.0,
+          "recall": 0.375,
+          "f1": 0.5454545454545454,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.625,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 15,
+            "tp": 9
+          }
+        }
+      },
+      "robustness": {
+        "clean_recall": 0.5833333333333334,
+        "worst_attack_recall": 0.0,
+        "maximum_recall_drop_from_clean": 0.5833333333333334
+      },
+      "threshold_analysis": [
+        {
+          "examples": 144,
+          "threshold": 0.3,
+          "accuracy": 0.6388888888888888,
+          "precision": 0.8125,
+          "recall": 0.3611111111111111,
+          "f1": 0.5,
+          "false_positive_rate": 0.08333333333333333,
+          "false_negative_rate": 0.6388888888888888,
+          "confusion_matrix": {
+            "tn": 66,
+            "fp": 6,
+            "fn": 46,
+            "tp": 26
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.4,
+          "accuracy": 0.6527777777777778,
+          "precision": 0.8928571428571429,
+          "recall": 0.3472222222222222,
+          "f1": 0.5,
+          "false_positive_rate": 0.041666666666666664,
+          "false_negative_rate": 0.6527777777777778,
+          "confusion_matrix": {
+            "tn": 69,
+            "fp": 3,
+            "fn": 47,
+            "tp": 25
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.5,
+          "accuracy": 0.6388888888888888,
+          "precision": 0.9545454545454546,
+          "recall": 0.2916666666666667,
+          "f1": 0.4468085106382979,
+          "false_positive_rate": 0.013888888888888888,
+          "false_negative_rate": 0.7083333333333334,
+          "confusion_matrix": {
+            "tn": 71,
+            "fp": 1,
+            "fn": 51,
+            "tp": 21
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.6,
+          "accuracy": 0.6180555555555556,
+          "precision": 1.0,
+          "recall": 0.2361111111111111,
+          "f1": 0.38202247191011235,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7638888888888888,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 55,
+            "tp": 17
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.7,
+          "accuracy": 0.5625,
+          "precision": 1.0,
+          "recall": 0.125,
+          "f1": 0.2222222222222222,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.875,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 63,
+            "tp": 9
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.2792926231883963
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.2792926231883963
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.4208837519621186
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.1375703195822965
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.1375703195822965
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.15005095833193238
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.20240605227381317
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.14023799208174362
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.14023799208174362
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.28588982295184207
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.21832982727526865
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.21832982727526865
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.323062987389036
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.22305640872663393
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.22305640872663393
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.5711623145965721
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.25793454376658387
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.25793454376658387
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.21234993651026152
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.2710691110195771
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.32295752984335624
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.32295752984335624
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.06750785957905606
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.24556289222536895
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.24556289222536895
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.44961260564545524
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.2850546108663472
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.2850546108663472
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.049985169528902494
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.1499891914697673
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.1499891914697673
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.18830394515890392
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.10122376936787109
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.1894768447993322
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.1894768447993322
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.28588982295184207
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.1761208564205397
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.1761208564205397
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.28588982295184207
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.559001963060764
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.559001963060764
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.9368588849579679
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.9826701985591959
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.9826701985591959
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.9368588849579679
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.9360749722967084
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.9360749722967084
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.9368588849579679
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.678292585237638
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.678292585237638
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.47989864099681273
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.42586737560268134
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.42586737560268134
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.6777302365437254
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.29794284694767886
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.29794284694767886
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.2590997205237004
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.17135974773179968
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.17135974773179968
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.23061534390044094
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.24810146528283336
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.24810146528283336
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.17470597540880178
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.36316672947225553
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.606712494636629
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.606712494636629
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.6518106784839764
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.5177845267230223
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.5177845267230223
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.8707528466301435
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.6737417270019315
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.6737417270019315
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.9368588849579679
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.1840163637098501
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.1840163637098501
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.20861248234820604
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.46954110590937037
+        }
+      ]
+    },
+    "distilbert-toxicity-v1": {
+      "model_version": "distilbert-toxicity-v1",
+      "decision_threshold": 0.5,
+      "overall": {
+        "examples": 144,
+        "threshold": 0.5,
+        "accuracy": 0.6319444444444444,
+        "precision": 1.0,
+        "recall": 0.2638888888888889,
+        "f1": 0.4175824175824176,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 0.7361111111111112,
+        "confusion_matrix": {
+          "tn": 72,
+          "fp": 0,
+          "fn": 53,
+          "tp": 19
+        }
+      },
+      "by_attack": {
+        "character_flooding": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5416666666666666,
+          "precision": 1.0,
+          "recall": 0.08333333333333333,
+          "f1": 0.15384615384615385,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.9166666666666666,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 11,
+            "tp": 1
+          }
+        },
+        "clean": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.75,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.5,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 6,
+            "tp": 6
+          }
+        },
+        "leetspeak": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 1.0,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 12,
+            "tp": 0
+          }
+        },
+        "punctuation": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 1.0,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 12,
+            "tp": 0
+          }
+        },
+        "uppercase": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.75,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.5,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 6,
+            "tp": 6
+          }
+        },
+        "zero_width": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.75,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.5,
+          "confusion_matrix": {
+            "tn": 12,
+            "fp": 0,
+            "fn": 6,
+            "tp": 6
+          }
+        }
+      },
+      "by_category": {
+        "harassment": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.5416666666666666,
+          "precision": 1.0,
+          "recall": 0.5416666666666666,
+          "f1": 0.7027027027027027,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.4583333333333333,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 11,
+            "tp": 13
+          }
+        },
+        "safe": {
+          "examples": 72,
+          "threshold": 0.5,
+          "accuracy": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.0,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 0,
+            "tp": 0
+          }
+        },
+        "threat": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 1.0,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 24,
+            "tp": 0
+          }
+        },
+        "toxicity": {
+          "examples": 24,
+          "threshold": 0.5,
+          "accuracy": 0.25,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.75,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 18,
+            "tp": 6
+          }
+        }
+      },
+      "robustness": {
+        "clean_recall": 0.5,
+        "worst_attack_recall": 0.0,
+        "maximum_recall_drop_from_clean": 0.5
+      },
+      "threshold_analysis": [
+        {
+          "examples": 144,
+          "threshold": 0.3,
+          "accuracy": 0.6597222222222222,
+          "precision": 1.0,
+          "recall": 0.3194444444444444,
+          "f1": 0.4842105263157894,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.6805555555555556,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 49,
+            "tp": 23
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.4,
+          "accuracy": 0.6319444444444444,
+          "precision": 1.0,
+          "recall": 0.2638888888888889,
+          "f1": 0.4175824175824176,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7361111111111112,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 53,
+            "tp": 19
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.5,
+          "accuracy": 0.6319444444444444,
+          "precision": 1.0,
+          "recall": 0.2638888888888889,
+          "f1": 0.4175824175824176,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7361111111111112,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 53,
+            "tp": 19
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.6,
+          "accuracy": 0.6111111111111112,
+          "precision": 1.0,
+          "recall": 0.2222222222222222,
+          "f1": 0.3636363636363636,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7777777777777778,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 56,
+            "tp": 16
+          }
+        },
+        {
+          "examples": 144,
+          "threshold": 0.7,
+          "accuracy": 0.6041666666666666,
+          "precision": 1.0,
+          "recall": 0.20833333333333334,
+          "f1": 0.3448275862068966,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7916666666666666,
+          "confusion_matrix": {
+            "tn": 72,
+            "fp": 0,
+            "fn": 57,
+            "tp": 15
+          }
+        }
+      ],
+      "predictions": [
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.0033829552121460438
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.0033829552121460438
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.0033829552121460438
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.005220405291765928
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.01433348748832941
+        },
+        {
+          "case_id": "safe-001",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.034183766692876816
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.0028508026152849197
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.0028508026152849197
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.0028508026152849197
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.004924234934151173
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.017538415268063545
+        },
+        {
+          "case_id": "safe-002",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.026590736582875252
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.003496159566566348
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.003496159566566348
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.003496159566566348
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.006465312093496323
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.020450351759791374
+        },
+        {
+          "case_id": "safe-003",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.0051741572096943855
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.00518744857981801
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.00518744857981801
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.00518744857981801
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.004940532613545656
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.013860121369361877
+        },
+        {
+          "case_id": "safe-004",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.043953508138656616
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.0034784157760441303
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.0034784157760441303
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.0034784157760441303
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.005525527056306601
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.016789598390460014
+        },
+        {
+          "case_id": "safe-005",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.03217918053269386
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.0027850030455738306
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.0027850030455738306
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.0027850030455738306
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.005466012749820948
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.014660017564892769
+        },
+        {
+          "case_id": "safe-006",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.011382585391402245
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.012957957573235035
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.012957957573235035
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.012957957573235035
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.005550361704081297
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.012484132312238216
+        },
+        {
+          "case_id": "safe-007",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.02065265364944935
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.0037491002585738897
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.0037491002585738897
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.0037491002585738897
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.005689903162419796
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.016168931499123573
+        },
+        {
+          "case_id": "safe-008",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.02171572856605053
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.004150675609707832
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.004150675609707832
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.004150675609707832
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.00591379264369607
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.01914840005338192
+        },
+        {
+          "case_id": "safe-009",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.0364474356174469
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.003981363959610462
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.003981363959610462
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.003981363959610462
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.006786505226045847
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.012759962119162083
+        },
+        {
+          "case_id": "safe-010",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.03387971967458725
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.004162123892456293
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.004162123892456293
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.004162123892456293
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.006092541851103306
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.01682661846280098
+        },
+        {
+          "case_id": "safe-011",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.02701720781624317
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "clean",
+          "score": 0.003573998808860779
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "uppercase",
+          "score": 0.003573998808860779
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "zero_width",
+          "score": 0.003573998808860779
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "leetspeak",
+          "score": 0.0060222516767680645
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "punctuation",
+          "score": 0.01695268228650093
+        },
+        {
+          "case_id": "safe-012",
+          "label": 0,
+          "category": "safe",
+          "attack": "character_flooding",
+          "score": 0.020454106852412224
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.9946957230567932
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.9946957230567932
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.9946957230567932
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.0056654042564332485
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.01887473650276661
+        },
+        {
+          "case_id": "unsafe-001",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.3573766350746155
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.9964642524719238
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.9964642524719238
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.9964642524719238
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.005997685715556145
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.02598397247493267
+        },
+        {
+          "case_id": "unsafe-002",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.13685767352581024
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.9961223006248474
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.9961223006248474
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.9961223006248474
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.00462262611836195
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.01499864924699068
+        },
+        {
+          "case_id": "unsafe-003",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.2770290672779083
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "clean",
+          "score": 0.9961197376251221
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "uppercase",
+          "score": 0.9961197376251221
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "zero_width",
+          "score": 0.9961197376251221
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "leetspeak",
+          "score": 0.006151997949928045
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "punctuation",
+          "score": 0.013270490802824497
+        },
+        {
+          "case_id": "unsafe-004",
+          "label": 1,
+          "category": "harassment",
+          "attack": "character_flooding",
+          "score": 0.6148020625114441
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.38487011194229126
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.38487011194229126
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.38487011194229126
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.005281318910419941
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.015062212012708187
+        },
+        {
+          "case_id": "unsafe-005",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.03283900022506714
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.008144665509462357
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.008144665509462357
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.008144665509462357
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.007979135029017925
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.0177109707146883
+        },
+        {
+          "case_id": "unsafe-006",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.030048415064811707
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.004649600945413113
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.004649600945413113
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.004649600945413113
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.005482048261910677
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.01567203179001808
+        },
+        {
+          "case_id": "unsafe-007",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.025393784046173096
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "clean",
+          "score": 0.005614873953163624
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "uppercase",
+          "score": 0.005614873953163624
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "zero_width",
+          "score": 0.005614873953163624
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "leetspeak",
+          "score": 0.006595573853701353
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "punctuation",
+          "score": 0.013146054930984974
+        },
+        {
+          "case_id": "unsafe-008",
+          "label": 1,
+          "category": "threat",
+          "attack": "character_flooding",
+          "score": 0.013991951011121273
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.5839697122573853
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.5839697122573853
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.5839697122573853
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.005595950409770012
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.015744009986519814
+        },
+        {
+          "case_id": "unsafe-009",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.017389917746186256
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.26603108644485474
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.26603108644485474
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.26603108644485474
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.006033084820955992
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.013919130899012089
+        },
+        {
+          "case_id": "unsafe-010",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.11563997715711594
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.9902136921882629
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.9902136921882629
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.9902136921882629
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.005464877467602491
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.013533071614801884
+        },
+        {
+          "case_id": "unsafe-011",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.022370416671037674
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "clean",
+          "score": 0.005936303175985813
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "uppercase",
+          "score": 0.005936303175985813
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "zero_width",
+          "score": 0.005936303175985813
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "leetspeak",
+          "score": 0.005215853452682495
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "punctuation",
+          "score": 0.013167452067136765
+        },
+        {
+          "case_id": "unsafe-012",
+          "label": 1,
+          "category": "toxicity",
+          "attack": "character_flooding",
+          "score": 0.013118029572069645
+        }
+      ]
+    }
+  }
+}

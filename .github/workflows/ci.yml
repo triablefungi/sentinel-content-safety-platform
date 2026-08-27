@@ -22,3 +22,7 @@ jobs:
         run: ruff check .
       - name: Test
         run: pytest
+      - name: Enforce adversarial evaluation gate
+        run: >-
+          python scripts/check_evaluation_gate.py
+          --model-version sentinel-max-ensemble-v1

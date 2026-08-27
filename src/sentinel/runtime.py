@@ -3,6 +3,7 @@ from pathlib import Path
 
 from sentinel.core.engine import ModerationEngine
 from sentinel.ml.baseline import SklearnToxicityModel
+from sentinel.ml.ensemble import MaxScoreToxicityEnsemble
 from sentinel.ml.transformer import TransformerToxicityModel
 from sentinel.threat_intelligence.service import ThreatIntelligenceService
 
@@ -17,12 +18,15 @@ def build_moderation_engine() -> ModerationEngine:
     baseline_path = Path(
         os.getenv("SENTINEL_MODEL_PATH", "artifacts/models/toxicity_baseline.joblib")
     )
+    toxicity_models = []
+    if baseline_path.exists():
+        toxicity_models.append(SklearnToxicityModel.load(baseline_path))
     if transformer_path.exists():
-        toxicity_model = TransformerToxicityModel.load(transformer_path)
-    elif baseline_path.exists():
-        toxicity_model = SklearnToxicityModel.load(baseline_path)
+        toxicity_models.append(TransformerToxicityModel.load(transformer_path))
+    if len(toxicity_models) > 1:
+        toxicity_model = MaxScoreToxicityEnsemble(toxicity_models)
     else:
-        toxicity_model = None
+        toxicity_model = toxicity_models[0] if toxicity_models else None
     threat_intelligence = _build_threat_intelligence()
     return ModerationEngine.default(
         toxicity_model=toxicity_model,

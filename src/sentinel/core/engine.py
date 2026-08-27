@@ -12,6 +12,9 @@ from sentinel.schemas.moderation import (
 )
 from sentinel.threat_intelligence.service import ThreatIntelligenceService
 
+MODEL_REVIEW_THRESHOLD = 0.40
+BLOCK_THRESHOLD = 0.85
+
 
 class ModerationEngine:
     """Combine deterministic rules and a swappable toxicity model."""
@@ -53,8 +56,8 @@ class ModerationEngine:
 
         model_score = 0.0
         if self._toxicity_model is not None:
-            model_score = self._toxicity_model.predict_score(request.text)
-            if model_score >= 0.50:
+            model_score = self._toxicity_model.predict_score(normalized_text)
+            if model_score >= MODEL_REVIEW_THRESHOLD:
                 signals.append(
                     ModerationSignal(
                         source=f"ml:{self._toxicity_model.version}",
@@ -85,9 +88,9 @@ class ModerationEngine:
         rule_score = max((match.severity for match in matches), default=0.0)
         risk_score = max(rule_score, model_score, threat_score)
 
-        if risk_score >= 0.85:
+        if risk_score >= BLOCK_THRESHOLD:
             decision = Decision.BLOCK
-        elif risk_score >= 0.50:
+        elif risk_score >= MODEL_REVIEW_THRESHOLD:
             decision = Decision.REVIEW
         else:
             decision = Decision.ALLOW
@@ -97,7 +100,7 @@ class ModerationEngine:
             decision=decision,
             risk_score=risk_score,
             signals=signals,
-            policy_version="2026-08-01",
+            policy_version="2026-08-27",
             evaluated_at=datetime.now(UTC),
         )
 

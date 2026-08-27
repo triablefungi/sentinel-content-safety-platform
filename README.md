@@ -8,7 +8,8 @@ human feedback, model evaluation, and reliability monitoring.
 > **Current milestone:** synchronous and Kafka-backed asynchronous moderation, Redis idempotency,
 > bounded retries, a dead-letter queue, Qdrant-backed near-duplicate campaign detection,
 > Prometheus/Grafana observability with SLO alerts and runbooks, a reproducible TF-IDF baseline,
-> and an evaluated DistilBERT classifier.
+> an evaluated DistilBERT classifier, and an adversarial text-evaluation suite with model-promotion
+> gates.
 
 ## Why this project exists
 
@@ -37,7 +38,7 @@ Response:
   "decision": "allow",
   "risk_score": 0.0,
   "signals": [],
-  "policy_version": "2026-08-01",
+  "policy_version": "2026-08-27",
   "evaluated_at": "2026-08-23T00:00:00Z"
 }
 ```
@@ -217,6 +218,35 @@ These results describe one held-out sample and are not production-safety claims.
 [`DistilBERT model card`](docs/model-card-transformer.md) for intended use, evaluation scope,
 risks, and limitations.
 
+## Evaluate adversarial robustness
+
+The versioned synthetic red-team suite turns 24 base cases into 144 deterministic variants per
+model across clean, casing, zero-width, leetspeak, punctuation, and character-flooding slices.
+Every variant passes through the same versioned canonicalization layer used in production, so the
+test measures the deployed model pipeline rather than an unreachable raw-model configuration.
+When both artifacts are present, Sentinel uses `sentinel-max-ensemble-v1`: the maximum TF-IDF or
+DistilBERT score is evaluated at the reviewed 0.40 intervention threshold. This recall-oriented
+choice is documented in [ADR 0006](docs/adr/0006-recall-oriented-model-ensemble.md).
+It reports overall, category, and attack-family metrics without copying raw text into the generated
+result artifact.
+
+With both trained model artifacts available, run:
+
+```bash
+python scripts/evaluate_adversarial.py --models both
+```
+
+Review the generated JSON and Markdown reports, then gate the candidate model:
+
+```bash
+python scripts/check_evaluation_gate.py --model-version sentinel-max-ensemble-v1
+```
+
+The threshold table is diagnostic: it does not silently modify production policy. See the
+[evaluation methodology](docs/adversarial-evaluation.md) and
+[evaluation-gate ADR](docs/adr/0005-adversarial-evaluation-gates.md) for scope, limitations, and
+promotion semantics.
+
 ## Engineering roadmap
 
 - **Milestone 1 — Foundation:** FastAPI, policy schemas, normalization, trie screening, tests,
@@ -231,7 +261,9 @@ risks, and limitations.
   metadata, and near-duplicate campaign detection. **Complete.**
 - **Milestone 6 — Operations:** Prometheus metrics, Grafana SLO dashboards, low-cardinality request
   instrumentation, alert rules, correlation IDs, and incident runbooks. **Complete.**
-- **Milestone 7 — Multimodal:** image safety classifier and combined text-image policy decisions.
+- **Milestone 7 — Adversarial evaluation:** versioned red-team cases, deterministic evasion
+  transformations, slice-level metrics, threshold analysis, and model-promotion gates.
+- **Milestone 8 — Multimodal:** image safety classifier and combined text-image policy decisions.
 
 ## Operational SLOs
 
@@ -264,6 +296,8 @@ docs/                  Architecture and decision records
 ops/                   Prometheus rules and Grafana provisioning
 notebooks/             Reproducible Colab GPU training workflow
 artifacts/metrics/     Versioned evaluation evidence
+data/evaluation/       Synthetic adversarial regression corpus
+config/                Version-controlled safety and promotion gates
 .github/workflows/     Continuous integration
 ```
 

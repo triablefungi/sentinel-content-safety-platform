@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "minimum_overall_recall": 0.60,
+  "minimum_overall_precision": 0.60,
+  "minimum_worst_attack_recall": 0.30,
+  "maximum_false_positive_rate": 0.25,
+  "maximum_recall_drop_from_clean": 0.50
+}
