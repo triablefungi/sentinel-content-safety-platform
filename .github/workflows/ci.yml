@@ -33,7 +33,7 @@ jobs:
       - name: Enforce repository security policy
         run: python scripts/check_security_configuration.py
       - name: Upload SBOM evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sentinel-cyclonedx-sbom
           path: artifacts/security/sbom.cdx.json
