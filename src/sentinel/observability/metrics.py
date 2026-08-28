@@ -70,6 +70,24 @@ class SentinelMetrics:
             buckets=(0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5),
             registry=self.registry,
         )
+        self.review_events = Counter(
+            "sentinel_review_events_total",
+            "Human-review workflow event outcomes.",
+            ["action", "outcome"],
+            registry=self.registry,
+        )
+        self.review_backlog = Gauge(
+            "sentinel_review_backlog",
+            "Human-review cases by workflow state.",
+            ["state"],
+            registry=self.registry,
+        )
+        self.review_resolution_duration = Histogram(
+            "sentinel_review_resolution_duration_seconds",
+            "Elapsed time from review creation to a human decision.",
+            buckets=(30, 60, 300, 900, 3600, 14400, 86400),
+            registry=self.registry,
+        )
         self.build_info.labels(service=service, version="0.1.0").set(1)
 
     @staticmethod
@@ -98,6 +116,9 @@ class SentinelMetrics:
 
     def record_terminal_job(self, state: str, error_code: str = "none") -> None:
         self.terminal_jobs.labels(state, error_code).inc()
+
+    def record_review_event(self, action: str, outcome: str) -> None:
+        self.review_events.labels(action, outcome).inc()
 
     def render(self) -> bytes:
         return generate_latest(self.registry)

@@ -9,8 +9,8 @@ human feedback, model evaluation, and reliability monitoring.
 > bounded retries, a dead-letter queue, Qdrant-backed near-duplicate campaign detection,
 > Prometheus/Grafana observability with SLO alerts and runbooks, a reproducible TF-IDF baseline,
 > an evaluated DistilBERT classifier, and an adversarial text-evaluation suite with model-promotion
-> gates. Secure multimodal ingestion and text-image policy fusion are now available behind an
-> explicitly downloaded, checksum-verified local model.
+> gates, secure multimodal policy fusion, and an authenticated human-review workflow with appeals,
+> hash-chained audit events, privacy-conscious feedback export, and backlog monitoring.
 
 ## Why this project exists
 
@@ -53,6 +53,24 @@ normalization, data structures, policy separation, and testing strategy before m
 and an `accepted` state. Poll `GET /v1/moderation/jobs/{job_id}` until the job is `succeeded` or
 `failed`. Replaying the same `request_id` and content is idempotent; reusing the ID with different
 content returns HTTP 409.
+
+### Human review
+
+Automation results with `decision: review`, plus cross-modal disagreements, enter an idempotent
+human-review queue when `SENTINEL_REVIEW_ENABLED=true`. Authenticated reviewers can list, claim,
+and decide cases; senior reviewers handle appeals; auditors inspect the ledger and export resolved
+label metadata. The ledger and export contain no raw text or image bytes.
+
+The Compose stack mounts development-only reviewer token hashes and persists its review ledger in
+a named volume. Verify the complete local claim, decision, appeal, audit, and export flow with:
+
+```bash
+python scripts/verify_review_workflow.py
+```
+
+The demonstration tokens are intentionally public and must never be reused outside local testing.
+See the [human-review architecture](docs/human-review-architecture.md) and
+[ADR 0009](docs/adr/0009-append-only-human-review-ledger.md).
 
 ## Run locally
 
@@ -292,9 +310,11 @@ promotion semantics.
 - **Milestone 6 — Operations:** Prometheus metrics, Grafana SLO dashboards, low-cardinality request
   instrumentation, alert rules, correlation IDs, and incident runbooks. **Complete.**
 - **Milestone 7 — Adversarial evaluation:** versioned red-team cases, deterministic evasion
-  transformations, slice-level metrics, threshold analysis, and model-promotion gates.
+  transformations, slice-level metrics, threshold analysis, and model-promotion gates. **Complete.**
 - **Milestone 8 — Multimodal:** secure image ingestion, an optional reviewed vision-model adapter,
-  and combined text-image policy decisions. **In progress.**
+  and combined text-image policy decisions. **Complete.**
+- **Milestone 9 — Human review:** authenticated review queues, appeals, append-only audit events,
+  feedback export, backlog metrics, and operational controls. **Complete.**
 
 ## Operational SLOs
 
@@ -305,6 +325,7 @@ global scale:
 - p95 latency below 250 ms for the fast moderation path.
 - At least 99.99% of accepted events reach a terminal decision or the dead-letter queue.
 - No model version is promoted when a category-specific safety threshold regresses.
+- Human-review pending and appealed backlog remains within its documented operating threshold.
 
 The precise indicators, PromQL, error-budget interpretation, and limitations are documented in
 [`docs/slo.md`](docs/slo.md). OpenTelemetry traces and production-grade long-term metric storage

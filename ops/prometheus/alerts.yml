@@ -57,3 +57,12 @@ groups:
         annotations:
           summary: "Moderation worker retry rate is elevated"
           runbook: "docs/runbooks/job-pipeline.md"
+
+      - alert: SentinelReviewBacklogHigh
+        expr: sum(sentinel_review_backlog{state=~"pending|appealed"}) > 100
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Human-review backlog exceeds the local operating threshold"
+          runbook: "docs/runbooks/review-backlog.md"

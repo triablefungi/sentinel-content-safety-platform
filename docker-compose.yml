@@ -7,6 +7,9 @@ x-sentinel-environment: &sentinel-environment
   SENTINEL_MODEL_PATH: /app/artifacts/models/toxicity_baseline.joblib
   SENTINEL_TRANSFORMER_MODEL_PATH: /app/artifacts/models/disabled-transformer
   SENTINEL_IMAGE_MODEL_PATH: /app/artifacts/models/image_safety
+  SENTINEL_REVIEW_ENABLED: "true"
+  SENTINEL_REVIEW_AUTH_PATH: /app/config/reviewer-auth.json
+  SENTINEL_REVIEW_LEDGER_PATH: /app/artifacts/review/review-ledger.jsonl
 
 services:
   kafka:
@@ -95,6 +98,8 @@ services:
     environment: *sentinel-environment
     volumes:
       - ./artifacts/models:/app/artifacts/models:ro
+      - ./config/reviewer-auth.example.json:/app/config/reviewer-auth.json:ro
+      - review-data:/app/artifacts/review
     depends_on:
       kafka-init:
         condition: service_completed_successfully
@@ -166,3 +171,4 @@ volumes:
   qdrant-data:
   prometheus-data:
   grafana-data:
+  review-data:

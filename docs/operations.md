@@ -29,6 +29,16 @@ The API also returns an `X-Request-ID` header. A caller may supply a safe `X-Req
 Sentinel creates one. This identifier is intended for log and trace correlation and must never be
 used as a Prometheus label.
 
+Verify the development human-review workflow with:
+
+```bash
+python scripts/verify_review_workflow.py
+```
+
+The verifier exercises claim, decision, appeal, senior review, audit history, and feedback export.
+The bundled bearer tokens are local demonstrations only. Review backlog and actions appear on the
+Grafana dashboard, and the backlog alert routes to `docs/runbooks/review-backlog.md`.
+
 Generate representative traffic with:
 
 ```bash
@@ -45,5 +55,5 @@ events.
 docker compose down
 ```
 
-Named volumes retain Redis, Qdrant, Prometheus, and Grafana data. Add `--volumes` only when an
-intentional destructive reset is required.
+Named volumes retain Redis, Qdrant, the append-only review ledger, Prometheus, and Grafana data.
+Add `--volumes` only when an intentional destructive reset is required.

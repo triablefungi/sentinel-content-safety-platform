@@ -74,6 +74,24 @@
       "targets": [{"expr": "histogram_quantile(0.95, sum by (le, path) (rate(sentinel_moderation_duration_seconds_bucket[5m])))", "legendFormat": "{{path}}", "refId": "A"}],
       "title": "Moderation engine p95",
       "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "short"}},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 21},
+      "id": 9,
+      "targets": [{"expr": "sum by (state) (sentinel_review_backlog)", "legendFormat": "{{state}}", "refId": "A"}],
+      "title": "Human-review backlog",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "sentinel-prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 21},
+      "id": 10,
+      "targets": [{"expr": "sum by (action, outcome) (rate(sentinel_review_events_total[5m]))", "legendFormat": "{{action}} / {{outcome}}", "refId": "A"}],
+      "title": "Human-review actions",
+      "type": "timeseries"
     }
   ],
   "refresh": "10s",

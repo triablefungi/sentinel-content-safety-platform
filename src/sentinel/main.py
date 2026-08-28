@@ -4,11 +4,16 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from sentinel.api.reviews import review_router
 from sentinel.api.routes import router
 from sentinel.distributed.protocols import JobService
 from sentinel.observability.metrics import API_METRICS
 from sentinel.observability.middleware import RequestObservabilityMiddleware
-from sentinel.runtime import build_image_safety_model, build_moderation_engine
+from sentinel.runtime import (
+    build_image_safety_model,
+    build_moderation_engine,
+    build_review_system,
+)
 
 
 @asynccontextmanager
@@ -18,6 +23,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     moderation_engine = build_moderation_engine()
     app.state.moderation_engine = moderation_engine
     app.state.image_safety_model = build_image_safety_model()
+    app.state.review_service, app.state.review_authorizer = build_review_system()
     if os.getenv("SENTINEL_DISTRIBUTED_ENABLED", "false").lower() in {"1", "true", "yes"}:
         from sentinel.distributed.bootstrap import build_job_service_from_env
 
@@ -42,3 +48,4 @@ app = FastAPI(
 app.state.metrics = API_METRICS
 app.add_middleware(RequestObservabilityMiddleware, metrics=API_METRICS)
 app.include_router(router)
+app.include_router(review_router)

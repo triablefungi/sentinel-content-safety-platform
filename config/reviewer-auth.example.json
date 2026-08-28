@@ -1,0 +1,20 @@
+{
+  "development_only": true,
+  "principals": [
+    {
+      "reviewer_id": "reviewer-demo",
+      "role": "reviewer",
+      "token_sha256": "17e2aa2dd70074a1f75f56c5893f21058550495a47683a7a2e8620b19a032043"
+    },
+    {
+      "reviewer_id": "senior-demo",
+      "role": "senior_reviewer",
+      "token_sha256": "d3e11e50c12a1f0dc03294a26f59e5c9f80fb96db3136eb12cdf7be679d09def"
+    },
+    {
+      "reviewer_id": "auditor-demo",
+      "role": "auditor",
+      "token_sha256": "1d972eec4954841d511e00aca6b0802135d902700acd5d36cf6675557e2151e3"
+    }
+  ]
+}

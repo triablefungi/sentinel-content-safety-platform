@@ -65,6 +65,11 @@ async def moderate_text(payload: ModerationRequest, request: Request) -> Moderat
         telemetry.timer() - started
     )
     telemetry.record_decision(response.decision.value, "synchronous")
+    review_service = request.app.state.review_service
+    if review_service is not None and review_service.enqueue(response) is not None:
+        telemetry.record_review_event("enqueued", "success")
+        for state, count in review_service.backlog().items():
+            telemetry.review_backlog.labels(state.value).set(count)
     return response
 
 
@@ -111,6 +116,11 @@ async def moderate_multimodal(
         telemetry.timer() - started
     )
     telemetry.record_decision(response.decision.value, "multimodal")
+    review_service = request.app.state.review_service
+    if review_service is not None and review_service.enqueue(response) is not None:
+        telemetry.record_review_event("enqueued", "success")
+        for state, count in review_service.backlog().items():
+            telemetry.review_backlog.labels(state.value).set(count)
     return response
 
 

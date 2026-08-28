@@ -17,3 +17,4 @@ def isolate_api_tests_from_local_model(
         "SENTINEL_IMAGE_MODEL_PATH",
         str(tmp_path / "missing-image-model"),
     )
+    monkeypatch.setenv("SENTINEL_REVIEW_ENABLED", "false")

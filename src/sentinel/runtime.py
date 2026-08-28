@@ -6,6 +6,9 @@ from sentinel.ml.baseline import SklearnToxicityModel
 from sentinel.ml.ensemble import MaxScoreToxicityEnsemble
 from sentinel.ml.transformer import TransformerToxicityModel
 from sentinel.multimodal.protocols import ImageSafetyModel
+from sentinel.review.auth import ReviewAuthorizer
+from sentinel.review.repository import JsonlReviewRepository
+from sentinel.review.service import ReviewService
 from sentinel.threat_intelligence.service import ThreatIntelligenceService
 
 
@@ -44,6 +47,20 @@ def build_image_safety_model() -> ImageSafetyModel | None:
     from sentinel.multimodal.timm_model import TimmImageSafetyModel
 
     return TimmImageSafetyModel.load(image_model_path)
+
+
+def build_review_system() -> tuple[ReviewService | None, ReviewAuthorizer | None]:
+    if os.getenv("SENTINEL_REVIEW_ENABLED", "false").lower() not in {"1", "true", "yes"}:
+        return None, None
+    ledger_path = Path(
+        os.getenv("SENTINEL_REVIEW_LEDGER_PATH", "artifacts/review/review-ledger.jsonl")
+    )
+    auth_path = Path(
+        os.getenv("SENTINEL_REVIEW_AUTH_PATH", "config/reviewer-auth.json")
+    )
+    repository = JsonlReviewRepository(ledger_path)
+    authorizer = ReviewAuthorizer.from_file(auth_path)
+    return ReviewService(repository), authorizer
 
 
 def _build_threat_intelligence() -> ThreatIntelligenceService | None:
