@@ -1,5 +1,8 @@
 # Sentinel Content Safety Platform
 
+[![CI](https://github.com/triablefungi/sentinel-content-safety-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/triablefungi/sentinel-content-safety-platform/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/triablefungi/sentinel-content-safety-platform/actions/workflows/codeql.yml/badge.svg)](https://github.com/triablefungi/sentinel-content-safety-platform/actions/workflows/codeql.yml)
+
 Sentinel is a production-oriented moderation platform for detecting harmful and adversarial
 user-generated content. It is being built as an end-to-end software engineering and ML system:
 from low-latency ingestion and algorithmic screening to transformer inference, vector retrieval,
@@ -10,7 +13,8 @@ human feedback, model evaluation, and reliability monitoring.
 > Prometheus/Grafana observability with SLO alerts and runbooks, a reproducible TF-IDF baseline,
 > an evaluated DistilBERT classifier, and an adversarial text-evaluation suite with model-promotion
 > gates, secure multimodal policy fusion, and an authenticated human-review workflow with appeals,
-> hash-chained audit events, privacy-conscious feedback export, and backlog monitoring.
+> hash-chained audit events, privacy-conscious feedback export, backlog monitoring, bounded API
+> requests, rate limiting, container hardening, CodeQL, and reproducible CycloneDX SBOM evidence.
 
 ## Why this project exists
 
@@ -195,6 +199,34 @@ controls in production. See
 detection contract, test procedure, privacy analysis, and limitations. The local Qdrant dashboard
 is available at `http://localhost:6333/dashboard` while Compose is running.
 
+## Security and release evidence
+
+Sentinel treats every text, image, identifier, and reviewer action as untrusted input. The API
+enforces an 8 MiB request-body ceiling, a configurable token-bucket rate limit, restrictive cache
+and browser security headers, and strict production-mode configuration. Health and metrics remain
+available to orchestrators without consuming the application request budget.
+
+The Compose API and worker run as a non-root user with a read-only root filesystem, all Linux
+capabilities dropped, and privilege escalation disabled. Local service ports bind only to
+`127.0.0.1`. These controls reduce the local attack surface; they do not replace a production TLS
+gateway, WAF, shared distributed limiter, authenticated data services, or workload identity.
+
+Generate and verify release evidence with:
+
+```bash
+python scripts/generate_sbom.py
+python scripts/check_security_configuration.py
+```
+
+With the Compose API running, verify the active headers, rate-limit metadata, and oversized-body
+rejection using `python scripts/verify_production_controls.py`.
+
+The deterministic CycloneDX 1.6 SBOM is derived from `uv.lock` and checked for drift in CI. CodeQL
+provides Python static analysis, Dependabot monitors Python, GitHub Actions, and Docker updates,
+and a scheduled Trivy workflow publishes HIGH/CRITICAL container findings for security review.
+See the [threat model](docs/threat-model.md), [deployment guide](docs/deployment.md),
+[security policy](SECURITY.md), and [release-boundary ADR](docs/adr/0010-defense-in-depth-release-boundary.md).
+
 ## Test and lint
 
 ```bash
@@ -315,6 +347,9 @@ promotion semantics.
   and combined text-image policy decisions. **Complete.**
 - **Milestone 9 — Human review:** authenticated review queues, appeals, append-only audit events,
   feedback export, backlog metrics, and operational controls. **Complete.**
+- **Milestone 10 — Production hardening and portfolio release:** request limits, rate limiting,
+  secure headers, safer container defaults, configuration gates, CodeQL, Dependabot, CycloneDX
+  SBOM evidence, threat modelling, deployment guidance, and a recruiter demo. **Complete.**
 
 ## Operational SLOs
 
@@ -351,6 +386,7 @@ artifacts/metrics/     Versioned evaluation evidence
 data/evaluation/       Synthetic adversarial regression corpus
 config/                Version-controlled safety and promotion gates
 .github/workflows/     Continuous integration
+SECURITY.md             Vulnerability-reporting and security boundaries
 ```
 
 ## License

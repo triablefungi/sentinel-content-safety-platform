@@ -1,4 +1,4 @@
-.PHONY: install run worker test lint docker-up docker-ps observe load-test
+.PHONY: install run worker test lint security sbom verify-security docker-up docker-ps observe load-test
 
 install:
 	python -m pip install -e ".[dev,ml,distributed,threat-intelligence]"
@@ -14,6 +14,15 @@ test:
 
 lint:
 	ruff check .
+
+security:
+	python scripts/check_security_configuration.py
+
+sbom:
+	python scripts/generate_sbom.py
+
+verify-security:
+	python scripts/verify_production_controls.py
 
 docker-up:
 	docker compose up --build

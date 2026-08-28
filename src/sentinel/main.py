@@ -14,6 +14,9 @@ from sentinel.runtime import (
     build_moderation_engine,
     build_review_system,
 )
+from sentinel.security import ProductionSecurityMiddleware, SecuritySettings
+
+SECURITY_SETTINGS = SecuritySettings.from_env()
 
 
 @asynccontextmanager
@@ -44,8 +47,12 @@ app = FastAPI(
     description="Layered moderation for user-generated content.",
     version="0.1.0",
     lifespan=lifespan,
+    docs_url="/docs" if SECURITY_SETTINGS.docs_enabled else None,
+    redoc_url="/redoc" if SECURITY_SETTINGS.docs_enabled else None,
+    openapi_url="/openapi.json" if SECURITY_SETTINGS.docs_enabled else None,
 )
 app.state.metrics = API_METRICS
+app.add_middleware(ProductionSecurityMiddleware, settings=SECURITY_SETTINGS)
 app.add_middleware(RequestObservabilityMiddleware, metrics=API_METRICS)
 app.include_router(router)
 app.include_router(review_router)

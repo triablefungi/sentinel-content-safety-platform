@@ -26,3 +26,15 @@ jobs:
         run: >-
           python scripts/check_evaluation_gate.py
           --model-version sentinel-max-ensemble-v1
+      - name: Generate reproducible CycloneDX SBOM
+        run: python scripts/generate_sbom.py
+      - name: Require lockfile and SBOM consistency
+        run: git diff --exit-code -- artifacts/security/sbom.cdx.json
+      - name: Enforce repository security policy
+        run: python scripts/check_security_configuration.py
+      - name: Upload SBOM evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-cyclonedx-sbom
+          path: artifacts/security/sbom.cdx.json
+          if-no-files-found: error

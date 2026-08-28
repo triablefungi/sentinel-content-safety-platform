@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "api": {
+    "max_request_bytes": 8388608,
+    "rate_limit_requests": 120,
+    "rate_limit_window_seconds": 60,
+    "required_headers": [
+      "Cache-Control",
+      "Content-Security-Policy",
+      "Permissions-Policy",
+      "Referrer-Policy",
+      "X-Content-Type-Options",
+      "X-Frame-Options"
+    ]
+  },
+  "production": {
+    "docs_enabled": false,
+    "hsts_enabled": true,
+    "rate_limit_enabled": true,
+    "example_credentials_permitted": false,
+    "public_operational_ports_permitted": false
+  },
+  "supply_chain": {
+    "lockfile": "uv.lock",
+    "sbom": "artifacts/security/sbom.cdx.json",
+    "sbom_format": "CycloneDX 1.6",
+    "static_analysis": "CodeQL",
+    "dependency_updates": "Dependabot",
+    "container_scan": "Scheduled Trivy HIGH/CRITICAL SARIF review"
+  }
+}
