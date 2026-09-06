@@ -32,6 +32,6 @@ jobs:
           ignore-unfixed: true
           exit-code: "0"
       - name: Upload findings to code scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results.sarif
