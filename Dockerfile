@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.15-slim
 
 LABEL org.opencontainers.image.title="Sentinel Content Safety Platform" \
     org.opencontainers.image.description="Production-oriented multimodal moderation API" \
